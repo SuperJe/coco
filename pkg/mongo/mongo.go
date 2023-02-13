@@ -2,8 +2,10 @@ package mongo
 
 import (
 	"context"
+	"fmt"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -31,4 +33,20 @@ func NewClient(c *ClientConfig) (*Client, error) {
 		return nil, err
 	}
 	return &Client{db: c.DB, cli: cli}, err
+}
+
+func (c *Client) Find(ctx context.Context) (interface{}, error) {
+	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, bson.M{"name": "codeMagic"})
+	if err != nil {
+		return nil, err
+	}
+
+	defer func() {
+		if err := cursor.Close(ctx); err != nil {
+			fmt.Println("cursor close err:", err.Error())
+		}
+	}()
+
+	fmt.Println("current cursor:", cursor.Current.String())
+	return nil, nil
 }
