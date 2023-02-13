@@ -47,6 +47,16 @@ func (c *Client) Find(ctx context.Context) (interface{}, error) {
 		}
 	}()
 
+	values, err := cursor.Current.Values()
+	if err != nil {
+		fmt.Println("values err:", err.Error())
+		panic(err)
+	}
+
+	fmt.Println("values len:", len(values))
+	for _, value := range values {
+		fmt.Println("value:", string(value.Value))
+	}
 	fmt.Println("current cursor:", cursor.Current.String())
 	return nil, nil
 }
