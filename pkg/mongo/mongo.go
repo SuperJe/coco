@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"fmt"
+	"go.mongodb.org/mongo-driver/bson"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -35,9 +36,10 @@ func NewClient(c *ClientConfig) (*Client, error) {
 }
 
 func (c *Client) Find(ctx context.Context) (interface{}, error) {
-	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, nil)
+	filter := bson.M{"name": "codeMagic"}
+	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, filter)
 	if err != nil {
-		fmt.Printf("find err: %s, db:%s", err.Error(), c.db)
+		fmt.Printf("find err: %s, db:%s\n", err.Error(), c.db)
 		return nil, err
 	}
 
