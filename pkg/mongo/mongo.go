@@ -43,7 +43,7 @@ func (c *Client) Find(ctx context.Context, collection string) (interface{}, erro
 		return nil, err
 	}
 
-	fmt.Println("search:", c.db)
+	fmt.Printf("search %s, id:%d\n", c.db, cursor.ID())
 	defer func() {
 		if err := cursor.Close(ctx); err != nil {
 			fmt.Println("cursor close err:", err.Error())
