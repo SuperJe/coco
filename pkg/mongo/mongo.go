@@ -35,9 +35,9 @@ func NewClient(c *ClientConfig) (*Client, error) {
 	return &Client{db: c.DB, cli: cli}, err
 }
 
-func (c *Client) Find(ctx context.Context) (interface{}, error) {
+func (c *Client) Find(ctx context.Context, collection string) (interface{}, error) {
 	filter := bson.D{{}}
-	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, filter)
+	cursor, err := c.cli.Database(c.db).Collection(collection).Find(ctx, filter)
 	if err != nil {
 		fmt.Printf("find err: %s, db:%s\n", err.Error(), c.db)
 		return nil, err
