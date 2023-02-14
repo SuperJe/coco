@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -36,27 +35,18 @@ func NewClient(c *ClientConfig) (*Client, error) {
 }
 
 func (c *Client) Find(ctx context.Context) (interface{}, error) {
-	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, bson.M{"name": "codeMagic"})
+	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, nil)
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Println("search:", c.db)
 	defer func() {
 		if err := cursor.Close(ctx); err != nil {
 			fmt.Println("cursor close err:", err.Error())
 		}
 	}()
+	fmt.Println("cursor raw:", string(cursor.Current))
 
-	values, err := cursor.Current.Values()
-	if err != nil {
-		fmt.Println("values err:", err.Error())
-		panic(err)
-	}
-
-	fmt.Println("values len:", len(values))
-	for _, value := range values {
-		fmt.Println("value:", string(value.Value))
-	}
-	fmt.Println("current cursor:", cursor.Current.String())
 	return nil, nil
 }
