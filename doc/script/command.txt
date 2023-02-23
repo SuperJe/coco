@@ -1,0 +1,12 @@
+# 更新数组文档里的指定key的value
+db.levels.update(
+  {"original":ObjectId("5a5f6fe6dfafb6002b2b5b36"), "permissions.access":"read"},
+  {'$set':{'permissions.$.target':'63e999f122b0ec015d2df745"'}}
+)
+
+
+# 删除一个嵌套文档key
+db.campaigns.update(
+  {"_id":ObjectId("549f07f7e21e041139ef28c7")},
+  {"$unset":{"levels.5a5f6fe6dfafb6002b2b5b36":""}}
+)

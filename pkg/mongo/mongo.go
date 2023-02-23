@@ -3,9 +3,9 @@ package mongo
 import (
 	"context"
 	"fmt"
-	"go.mongodb.org/mongo-driver/bson"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -36,7 +36,7 @@ func NewClient(c *ClientConfig) (*Client, error) {
 }
 
 func (c *Client) Find(ctx context.Context, collection string) (interface{}, error) {
-	filter := bson.D{{}}
+	filter := bson.M{"name": "codeMagic"}
 	r := c.cli.Database(c.db).Collection(collection).FindOne(ctx, filter)
 	if r.Err() != nil {
 		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
