@@ -1,7 +1,9 @@
 package main
 
 import (
+	"coco/pkg/mongo/entity"
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"coco/pkg/mongo"
@@ -10,6 +12,10 @@ import (
 
 var mgo *mongo.Client
 
+const (
+	collection = "campaigns"
+)
+
 func main() {
 	var err error
 	mgo, err = mongo.NewCocoClient()
@@ -17,10 +23,11 @@ func main() {
 		panic(err)
 	}
 
-	str, err := mgo.FindOne(context.Background(), "campaigns", bson.M{"name": "Dungeon"})
-	if err != nil {
+	dungeon := &entity.Campaign{}
+	if err := mgo.FindOne(context.Background(), collection, bson.M{"name": "Dungeon"}, dungeon); err != nil {
 		fmt.Println("FindOne err:", err.Error())
 		return
 	}
-	fmt.Printf("find one:%s\n", str.(string))
+	bs, _ := json.Marshal(dungeon)
+	fmt.Printf("dungeon:\n\n:%s", string(bs))
 }

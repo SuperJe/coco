@@ -45,17 +45,18 @@ func NewCocoClient() (*Client, error) {
 	return NewClient(c)
 }
 
-func (c *Client) FindOne(ctx context.Context, collection string, filter bson.M) (interface{}, error) {
+func (c *Client) FindOne(ctx context.Context, collection string, filter bson.M, v interface{}) error {
 	r := c.cli.Database(c.db).Collection(collection).FindOne(ctx, filter)
 	if r.Err() != nil {
 		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
-		return nil, r.Err()
+		return r.Err()
 	}
-	raw, err := r.DecodeBytes()
-	if err != nil {
-		fmt.Printf("r.DecodeBytes err:%s\n", err.Error())
-		return nil, err
-	}
-	fmt.Printf("raw string:%s\n", raw.String())
-	return raw.String(), nil
+	// raw, err := r.DecodeBytes()
+	// if err != nil {
+	// 	fmt.Printf("r.DecodeBytes err:%s\n", err.Error())
+	// 	return nil, err
+	// }
+	// fmt.Printf("raw string:%s\n", raw.String())
+	// return raw.String(), nil
+	return r.Decode(v)
 }

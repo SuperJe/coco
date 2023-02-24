@@ -25,7 +25,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	_, err = cli.FindOne(context.Background(), collection, bson.M{})
+	_, err = cli.FindOne(context.Background(), collection, bson.M{}, nil)
 	if err != nil {
 		panic(err)
 	}
