@@ -27,7 +27,10 @@ func mapLevelName() {
 	for id, level := range dungeon.Levels {
 		mapping[id] = level.I18Ns["zh-HANS"].Name
 	}
-	fmt.Printf("total:%d, mapping:\n\n %+v\n", len(mapping), mapping)
+	fmt.Println("levels num:", len(mapping))
+	for id, name := range mapping {
+		fmt.Printf("id: %s,    name:%s\n", id, name)
+	}
 }
 
 // 进程初始化
