@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"flag"
+	"go.mongodb.org/mongo-driver/bson"
 	"time"
 
 	"coco/pkg/mongo"
@@ -24,7 +25,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	_, err = cli.Find(context.Background(), collection)
+	_, err = cli.FindOne(context.Background(), collection, bson.M{})
 	if err != nil {
 		panic(err)
 	}

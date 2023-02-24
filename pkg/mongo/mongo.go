@@ -21,13 +21,7 @@ type Client struct {
 	cli *mongo.Client
 }
 
-type User struct {
-	CreateHost string `bson:"createdOnHost"`
-	Anonymous  bool   `bson:"anonymous"`
-	Email      string `bson:"email"`
-}
-
-// NewClient new mongo client
+// NewClient 通用mongo client
 func NewClient(c *ClientConfig) (*Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout)
 	defer cancel()
@@ -41,24 +35,27 @@ func NewClient(c *ClientConfig) (*Client, error) {
 	return &Client{db: c.DB, cli: cli}, err
 }
 
-func (c *Client) Find(ctx context.Context, collection string) (interface{}, error) {
-	filter := bson.M{"name": "codeMagic"}
+// NewCocoClient 本机coco数据库的mongo client
+func NewCocoClient() (*Client, error) {
+	c := &ClientConfig{
+		URI:     "mongodb://127.0.0.1:27017",
+		DB:      "coco",
+		Timeout: time.Second * 5,
+	}
+	return NewClient(c)
+}
+
+func (c *Client) FindOne(ctx context.Context, collection string, filter bson.M) (interface{}, error) {
 	r := c.cli.Database(c.db).Collection(collection).FindOne(ctx, filter)
 	if r.Err() != nil {
 		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
 		return nil, r.Err()
 	}
-	// raw, err := r.DecodeBytes()
-	user := &User{}
-	if err := r.Decode(user); err != nil {
-		fmt.Printf("r.Decode err:%s", err.Error())
+	raw, err := r.DecodeBytes()
+	if err != nil {
+		fmt.Printf("r.DecodeBytes err:%s\n", err.Error())
 		return nil, err
 	}
-	fmt.Printf("user:%+v", user)
-	// if err != nil {
-	// 	fmt.Printf("r.DecodeBytes err:%s\n", err.Error())
-	// 	return nil, err
-	// }
-	// fmt.Printf("raw string:%s\n", raw.String())
-	return nil, nil
+	fmt.Printf("raw string:%s\n", raw.String())
+	return raw.String(), nil
 }
