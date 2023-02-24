@@ -1,33 +1,55 @@
 package main
 
 import (
-	"coco/pkg/mongo/entity"
 	"context"
-	"encoding/json"
+	"flag"
 	"fmt"
 
 	"coco/pkg/mongo"
+	"coco/pkg/mongo/entity"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-var mgo *mongo.Client
-
-const (
-	collection = "campaigns"
+var (
+	mgo     *mongo.Client
+	dungeon *entity.Campaign
+	method  string
 )
 
-func main() {
+const (
+	collection        = "campaigns"
+	methodMappingName = "mapping_name"
+)
+
+// 建立level ObjectId -> level中文名的映射
+func mapLevelName() {
+	mapping := make(map[string]string, len(dungeon.Levels))
+	for id, level := range dungeon.Levels {
+		mapping[id] = level.I18Ns["zh-HANS"].Name
+	}
+	fmt.Printf("total:%d, mapping:\n\n %+v\n", len(mapping), mapping)
+}
+
+// 进程初始化
+func init() {
 	var err error
 	mgo, err = mongo.NewCocoClient()
 	if err != nil {
 		panic(err)
 	}
-
-	dungeon := &entity.Campaign{}
 	if err := mgo.FindOne(context.Background(), collection, bson.M{"name": "Dungeon"}, dungeon); err != nil {
 		fmt.Println("FindOne err:", err.Error())
-		return
+		panic(err)
 	}
-	bs, _ := json.Marshal(dungeon)
-	fmt.Printf("dungeon:\n\n:%s", string(bs))
+	flag.StringVar(&method, "method", "", "执行方法")
+}
+
+func main() {
+	flag.Parse()
+	switch method {
+	case methodMappingName:
+		mapLevelName()
+	default:
+		panic("method invalid")
+	}
 }
