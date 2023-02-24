@@ -11,9 +11,9 @@ import (
 )
 
 var (
-	mgo     *mongo.Client
-	dungeon *entity.Campaign
 	method  string
+	mgo     *mongo.Client
+	dungeon = &entity.Campaign{}
 )
 
 const (
