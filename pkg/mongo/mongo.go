@@ -21,6 +21,12 @@ type Client struct {
 	cli *mongo.Client
 }
 
+type User struct {
+	CreateHost string `bson:"createdOnHost"`
+	Anonymous  bool   `bson:"anonymous"`
+	Email      string `bson:"email"`
+}
+
 // NewClient new mongo client
 func NewClient(c *ClientConfig) (*Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout)
@@ -42,20 +48,17 @@ func (c *Client) Find(ctx context.Context, collection string) (interface{}, erro
 		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
 		return nil, r.Err()
 	}
-	raw, err := r.DecodeBytes()
-	if err != nil {
-		fmt.Printf("r.DecodeBytes err:%s\n", err.Error())
+	// raw, err := r.DecodeBytes()
+	user := &User{}
+	if err := r.Decode(user); err != nil {
+		fmt.Printf("r.Decode err:%s", err.Error())
 		return nil, err
 	}
-	fmt.Printf("raw string:%s\n", raw.String())
-
-	// fmt.Printf("search %s, id:%d\n", c.db, cursor.ID())
-	// defer func() {
-	// 	if err := cursor.Close(ctx); err != nil {
-	// 		fmt.Println("cursor close err:", err.Error())
-	// 	}
-	// }()
-	// fmt.Println("cursor raw:", string(cursor.Current))
-
+	fmt.Printf("user:%+v", user)
+	// if err != nil {
+	// 	fmt.Printf("r.DecodeBytes err:%s\n", err.Error())
+	// 	return nil, err
+	// }
+	// fmt.Printf("raw string:%s\n", raw.String())
 	return nil, nil
 }

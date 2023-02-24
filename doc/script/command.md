@@ -1,3 +1,4 @@
+[toc]
 # 更新数组文档里的指定key的value
 db.levels.update(
   {"original":ObjectId("5a5f6fe6dfafb6002b2b5b36"), "permissions.access":"read"},
