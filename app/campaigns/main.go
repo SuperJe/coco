@@ -23,7 +23,7 @@ var (
 
 const (
 	collection            = "campaigns"
-	levelWithIDFile       = "level_with_id.txt"
+	levelWithIDFile       = "../../doc/campaign/level_with_id.txt"
 	methodSelectedLevelID = "selected_level_id"
 )
 
@@ -38,7 +38,7 @@ func getLevelMapping() map[string]string {
 		}
 		mapping[i18n.Name] = id
 	}
-	fmt.Println("levels num:", len(mapping))
+	fmt.Println("dungeon 所有关卡数:", len(mapping))
 	return mapping
 }
 
@@ -62,6 +62,7 @@ func writeSelectedLevelsWithID() error {
 	}
 
 	// 找到需要的关卡id, 一起写入新文件
+	total := 0
 	buff := &bytes.Buffer{}
 	for _, name := range names {
 		id, ok := mapping[name]
@@ -72,8 +73,14 @@ func writeSelectedLevelsWithID() error {
 		if _, err := buff.WriteString(str); err != nil {
 			return err
 		}
+		total++
 	}
-	return ioutil.WriteFile(levelWithIDFile, buff.Bytes(), fs.FileMode(0666))
+	if err := ioutil.WriteFile(levelWithIDFile, buff.Bytes(), fs.FileMode(0666)); err != nil {
+		return err
+	}
+	fmt.Println("写入路径:", levelWithIDFile)
+	fmt.Println("成功写入带id的关卡数量:", total)
+	return nil
 }
 
 // 进程初始化
@@ -87,8 +94,8 @@ func init() {
 		fmt.Println("FindOne err:", err.Error())
 		panic(err)
 	}
-	flag.StringVar(&method, "method", "", "执行方法")
-	flag.StringVar(&selectedLevelsFile, "selected_levels", "", "需要关卡的文件名")
+	flag.StringVar(&method, "method", "", "执行方法:  selected_level_id")
+	flag.StringVar(&selectedLevelsFile, "level_file", "", "需要关卡的文件名")
 }
 
 func main() {
