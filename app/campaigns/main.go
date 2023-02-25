@@ -1,9 +1,13 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"flag"
 	"fmt"
+	"io/fs"
+	"io/ioutil"
+	"strings"
 
 	"coco/pkg/mongo"
 	"coco/pkg/mongo/entity"
@@ -11,18 +15,20 @@ import (
 )
 
 var (
-	method  string
-	mgo     *mongo.Client
-	dungeon = &entity.Campaign{}
+	method             string
+	selectedLevelsFile string
+	mgo                *mongo.Client
+	dungeon            = &entity.Campaign{}
 )
 
 const (
-	collection        = "campaigns"
-	methodMappingName = "mapping_name"
+	collection            = "campaigns"
+	levelWithIDFile       = "level_with_id.txt"
+	methodSelectedLevelID = "selected_level_id"
 )
 
 // 建立level ObjectId -> level中文名的映射
-func mapLevelName() {
+func getLevelMapping() map[string]string {
 	mapping := make(map[string]string, len(dungeon.Levels))
 	for id, level := range dungeon.Levels {
 		i18n, ok := level.I18Ns["zh-HANS"]
@@ -30,12 +36,44 @@ func mapLevelName() {
 			fmt.Printf("level %s miss zh-HANS i18n\n", level.Name)
 			continue
 		}
-		mapping[id] = i18n.Name
+		mapping[i18n.Name] = id
 	}
 	fmt.Println("levels num:", len(mapping))
-	for id, name := range mapping {
-		fmt.Printf("id: %s,    name:%s\n", id, name)
+	return mapping
+}
+
+func getSelectedLevels() ([]string, error) {
+	// 文件不大, 可以一次性读取进内存
+	bs, err := ioutil.ReadFile(selectedLevelsFile)
+	if err != nil {
+		return nil, err
 	}
+	return strings.Split(string(bs), "\n"), nil
+}
+
+func writeSelectedLevelsWithID() error {
+	if len(selectedLevelsFile) == 0 {
+		return fmt.Errorf("请指定文件名\n")
+	}
+	mapping := getLevelMapping()
+	names, err := getSelectedLevels()
+	if err != nil {
+		return err
+	}
+
+	// 找到需要的关卡id, 一起写入新文件
+	buff := &bytes.Buffer{}
+	for _, name := range names {
+		id, ok := mapping[name]
+		if !ok {
+			continue
+		}
+		str := fmt.Sprintf("id\t%s\tname\t%s\n", id, name)
+		if _, err := buff.WriteString(str); err != nil {
+			return err
+		}
+	}
+	return ioutil.WriteFile(levelWithIDFile, buff.Bytes(), fs.FileMode(0666))
 }
 
 // 进程初始化
@@ -50,13 +88,16 @@ func init() {
 		panic(err)
 	}
 	flag.StringVar(&method, "method", "", "执行方法")
+	flag.StringVar(&selectedLevelsFile, "selected_levels", "", "需要关卡的文件名")
 }
 
 func main() {
 	flag.Parse()
 	switch method {
-	case methodMappingName:
-		mapLevelName()
+	case methodSelectedLevelID:
+		if err := writeSelectedLevelsWithID(); err != nil {
+			panic(err)
+		}
 	default:
 		panic("method invalid")
 	}

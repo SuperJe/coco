@@ -11,3 +11,6 @@ db.campaigns.update(
   {"_id":ObjectId("549f07f7e21e041139ef28c7")},
   {"$unset":{"levels.5a5f6fe6dfafb6002b2b5b36":""}}
 )
+
+# 还原某个集合
+db.campaignstmp.find().forEach(function(doc){ db.campaigns.insert(doc) })
