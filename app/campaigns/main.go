@@ -25,7 +25,12 @@ const (
 func mapLevelName() {
 	mapping := make(map[string]string, len(dungeon.Levels))
 	for id, level := range dungeon.Levels {
-		mapping[id] = level.I18Ns["zh-HANS"].Name
+		i18n, ok := level.I18Ns["zh-HANS"]
+		if !ok {
+			fmt.Printf("level %s miss zh-HANS i18n\n", level.Name)
+			continue
+		}
+		mapping[id] = i18n.Name
 	}
 	fmt.Println("levels num:", len(mapping))
 	for id, name := range mapping {
