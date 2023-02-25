@@ -23,7 +23,7 @@ var (
 
 const (
 	collection            = "campaigns"
-	levelWithIDFile       = "../../doc/campaign/level_with_id.txt"
+	levelWithIDFile       = "/home/coco/codecombat/data/coco/doc/campaign/level_with_id.txt"
 	methodSelectedLevelID = "selected_level_id"
 )
 
