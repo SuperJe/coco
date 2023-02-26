@@ -23,10 +23,10 @@ var (
 )
 
 const (
-	collection            = "campaigns"
-	deletedLevelFile      = "/home/coco/codecombat/data/coco/doc/campaign/deleted_level.txt"
-	achievementsFile      = "/home/coco/codecombat/data/coco/doc/campaign/achievements.txt"
-	methodSelectedLevelID = "selected_level_id"
+	collection       = "campaigns"
+	deletedLevelFile = "/home/coco/codecombat/data/coco/doc/campaign/deleted_level.txt"
+	achievementsFile = "/home/coco/codecombat/data/coco/doc/campaign/achievements.txt"
+	methodRebuildAll = "rebuild_all"
 )
 
 // 返回 level中文名 -> level ObjectId的映射
@@ -143,7 +143,7 @@ func init() {
 func main() {
 	flag.Parse()
 	switch method {
-	case methodSelectedLevelID:
+	case methodRebuildAll:
 		if err := reBuildDungeon(); err != nil {
 			panic(err)
 		}
