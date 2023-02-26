@@ -65,12 +65,11 @@ func writeDeletedLevelsWithID() error {
 	selectedLevels := sliceutil.ToStringSet(names)
 	total := 0
 	buff := &bytes.Buffer{}
-	for _, level := range allLevels {
-		id, ok := selectedLevels[level]
-		if ok {
+	for name, id := range allLevels {
+		if _, ok := selectedLevels[name]; ok {
 			continue
 		}
-		str := fmt.Sprintf("id\t%s\tname\t%s\n", id, level)
+		str := fmt.Sprintf("id\t%s\tname\t%s\n", id, name)
 		if _, err := buff.WriteString(str); err != nil {
 			return err
 		}
