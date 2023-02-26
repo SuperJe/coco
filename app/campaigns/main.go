@@ -101,7 +101,7 @@ func reBuildAchievements() error {
 			key := slug + "-complete"
 			level := name2ID[selected[i+1]]
 			achievements[key] = level
-			str := fmt.Sprintf("%s:%s", key, level)
+			str := fmt.Sprintf("%s:%s\n", key, level)
 			if _, err := buff.WriteString(str); err != nil {
 				return err
 			}
