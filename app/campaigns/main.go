@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"coco/pkg/util/sliceutil"
 	"context"
 	"flag"
 	"fmt"
@@ -27,7 +28,7 @@ const (
 	methodSelectedLevelID = "selected_level_id"
 )
 
-// 建立level ObjectId -> level中文名的映射
+// 建立 level中文名 -> level ObjectId的映射
 func getLevelMapping() map[string]string {
 	mapping := make(map[string]string, len(dungeon.Levels))
 	for id, level := range dungeon.Levels {
@@ -55,21 +56,21 @@ func writeDeletedLevelsWithID() error {
 	if len(selectedLevelsFile) == 0 {
 		return fmt.Errorf("请指定文件名\n")
 	}
-	mapping := getLevelMapping()
+	// 找到不需要的关卡id, 写入新文件
+	allLevels := getLevelMapping()
 	names, err := getSelectedLevels()
 	if err != nil {
 		return err
 	}
-
-	// 找到不需要的关卡id, 写入新文件
+	selectedLevels := sliceutil.ToStringSet(names)
 	total := 0
 	buff := &bytes.Buffer{}
-	for _, name := range names {
-		id, ok := mapping[name]
+	for _, level := range allLevels {
+		id, ok := selectedLevels[level]
 		if ok {
 			continue
 		}
-		str := fmt.Sprintf("id\t%s\tname\t%s\n", id, name)
+		str := fmt.Sprintf("id\t%s\tname\t%s\n", id, level)
 		if _, err := buff.WriteString(str); err != nil {
 			return err
 		}
