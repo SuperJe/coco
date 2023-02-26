@@ -105,6 +105,11 @@ func reBuildAchievements() error {
 			if _, err := buff.WriteString(str); err != nil {
 				return err
 			}
+			// 有可能是completed
+			str = fmt.Sprintf("%sd:%s\n", key, level)
+			if _, err := buff.WriteString(str); err != nil {
+				return err
+			}
 		}
 	}
 	if err := ioutil.WriteFile(achievementsFile, buff.Bytes(), fs.FileMode(0666)); err != nil {
