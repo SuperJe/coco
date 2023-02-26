@@ -6,13 +6,20 @@ go build -o main ../../app/campaigns
 # 读取要被删除的关卡, 操作mongo删除
 awk -F"\t" '{print $2}' ../../doc/campaign/deleted_level.txt | while read row
 do
-  cmd='db.campaigns.update({"_id":ObjectId("549f07f7e21e041139ef28c7")}, {"$unset":{"levels.'$row'":""}})'
+  # cmd='db.campaigns.update({"_id":ObjectId("549f07f7e21e041139ef28c7")}, {"$unset":{"levels.'$row'":""}})'
   mongo --eval 'db.campaigns.update({"_id":ObjectId("549f07f7e21e041139ef28c7")}, {"$unset":{"levels.'$row'":""}});' coco
 done
 # 读取重新索引的奖励关卡文件, 重建奖励
-cat ../../doc/campaign/achievements.txt | while read line
+while read line
 do
-  array=(${string//:/ })
-  echo $array[0]
-done
+  str=$line
+  arr=($(echo $str | tr ":" "\n"))
+  slug=${arr[0]}
+  acv=${arr[1]}
+  # 更新下一个奖励关卡
+  mongo --eval 'db.achievements.update({"slug":"'$slug'"}, {$set: {"rewards.levels": ["'$acv'"]}});' coco
+  # 关闭订阅
+  mongo --eval 'db.levels.update({"original":ObjectId("'$acv'")}, {$set:{"requiresSubscription": false}});' coco
+  mongo --eval 'db.campaigns.update({"name":"Dungeon"}, {$set:{"levels.'$acv'.requiresSubscription":false}});' coco
+done < ../../doc/campaign/achievements.txt
 rm main
