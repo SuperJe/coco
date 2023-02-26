@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"coco/pkg/util/sliceutil"
 	"context"
 	"flag"
 	"fmt"
@@ -12,6 +11,7 @@ import (
 
 	"coco/pkg/mongo"
 	"coco/pkg/mongo/entity"
+	"coco/pkg/util/sliceutil"
 	"go.mongodb.org/mongo-driver/bson"
 )
 
@@ -25,10 +25,11 @@ var (
 const (
 	collection            = "campaigns"
 	deletedLevelFile      = "/home/coco/codecombat/data/coco/doc/campaign/deleted_level.txt"
+	achievementsFile      = "/home/coco/codecombat/data/coco/doc/campaign/achievements.txt"
 	methodSelectedLevelID = "selected_level_id"
 )
 
-// 建立 level中文名 -> level ObjectId的映射
+// 返回 level中文名 -> level ObjectId的映射
 func getLevelMapping() map[string]string {
 	mapping := make(map[string]string, len(dungeon.Levels))
 	for id, level := range dungeon.Levels {
@@ -83,6 +84,47 @@ func writeDeletedLevelsWithID() error {
 	return nil
 }
 
+func reBuildAchievements() error {
+	// 建立achievements集合的slug->重建的奖励level映射
+	name2ID := getLevelMapping()
+	selected, err := getSelectedLevels()
+	if err != nil {
+		return err
+	}
+	buff := &bytes.Buffer{}
+	achievements := make(map[string]string, len(selected))
+	for i := 0; i < len(selected); i++ {
+		id := name2ID[selected[i]]
+		slug := dungeon.Levels[id].Slug
+		if i+1 < len(selected) {
+			// 建立映射, 当前slug完成的奖励为下一关卡的id
+			key := slug + "-complete"
+			level := name2ID[selected[i+1]]
+			achievements[key] = level
+			str := fmt.Sprintf("%s:%s", key, level)
+			if _, err := buff.WriteString(str); err != nil {
+				return err
+			}
+		}
+	}
+	if err := ioutil.WriteFile(achievementsFile, buff.Bytes(), fs.FileMode(0666)); err != nil {
+		return err
+	}
+	fmt.Println("重新奖励索引完成, 共重建:", len(achievements))
+	return nil
+}
+
+// 重建地牢关卡
+func reBuildDungeon() error {
+	if err := writeDeletedLevelsWithID(); err != nil {
+		return err
+	}
+	if err := reBuildAchievements(); err != nil {
+		return err
+	}
+	return nil
+}
+
 // 进程初始化
 func init() {
 	var err error
@@ -102,7 +144,7 @@ func main() {
 	flag.Parse()
 	switch method {
 	case methodSelectedLevelID:
-		if err := writeDeletedLevelsWithID(); err != nil {
+		if err := reBuildDungeon(); err != nil {
 			panic(err)
 		}
 	default:

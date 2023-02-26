@@ -1,10 +1,18 @@
 [toc]
-# 更新数组文档里的指定key的value
+# 更新
+## 更新权限
 db.levels.update(
   {"original":ObjectId("5a5f6fe6dfafb6002b2b5b36"), "permissions.access":"read"},
   {'$set':{'permissions.$.target':'63e999f122b0ec015d2df745"'}}
 )
 
+## 更新订阅状态
+db.campaigns.update({"name":"Dungeon"}, {$set:{"levels.54527a6257e83800009730c7.requiresSubscription":false}})
+db.levels.update({"original":ObjectId("54527a6257e83800009730c7")}, $set:{"requiresSubscription": false})
+
+##  更新奖励
+## 删除某个奖励关卡
+db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
 
 # 删除一个嵌套文档key
 db.campaigns.update(
@@ -12,5 +20,9 @@ db.campaigns.update(
   {"$unset":{"levels.5a5f6fe6dfafb6002b2b5b36":""}}
 )
 
-# 还原某个集合
+# copy某个集合
+## copy campaigns
 db.campaignstmp.find().forEach(function(doc){ db.campaigns.insert(doc) })
+
+## copy achievements
+db.achievementstmp.find().forEach(function(doc){ db.achievements.insert(doc) })
