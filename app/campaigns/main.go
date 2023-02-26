@@ -23,7 +23,7 @@ var (
 
 const (
 	collection            = "campaigns"
-	levelWithIDFile       = "/home/coco/codecombat/data/coco/doc/campaign/level_with_id.txt"
+	deletedLevelFile      = "/home/coco/codecombat/data/coco/doc/campaign/deleted_level.txt"
 	methodSelectedLevelID = "selected_level_id"
 )
 
@@ -51,7 +51,7 @@ func getSelectedLevels() ([]string, error) {
 	return strings.Split(string(bs), "\n"), nil
 }
 
-func writeSelectedLevelsWithID() error {
+func writeDeletedLevelsWithID() error {
 	if len(selectedLevelsFile) == 0 {
 		return fmt.Errorf("请指定文件名\n")
 	}
@@ -61,12 +61,12 @@ func writeSelectedLevelsWithID() error {
 		return err
 	}
 
-	// 找到需要的关卡id, 一起写入新文件
+	// 找到不需要的关卡id, 写入新文件
 	total := 0
 	buff := &bytes.Buffer{}
 	for _, name := range names {
 		id, ok := mapping[name]
-		if !ok {
+		if ok {
 			continue
 		}
 		str := fmt.Sprintf("id\t%s\tname\t%s\n", id, name)
@@ -75,10 +75,10 @@ func writeSelectedLevelsWithID() error {
 		}
 		total++
 	}
-	if err := ioutil.WriteFile(levelWithIDFile, buff.Bytes(), fs.FileMode(0666)); err != nil {
+	if err := ioutil.WriteFile(deletedLevelFile, buff.Bytes(), fs.FileMode(0666)); err != nil {
 		return err
 	}
-	fmt.Println("写入路径:", levelWithIDFile)
+	fmt.Println("写入路径:", deletedLevelFile)
 	fmt.Println("成功写入带id的关卡数量:", total)
 	return nil
 }
@@ -102,7 +102,7 @@ func main() {
 	flag.Parse()
 	switch method {
 	case methodSelectedLevelID:
-		if err := writeSelectedLevelsWithID(); err != nil {
+		if err := writeDeletedLevelsWithID(); err != nil {
 			panic(err)
 		}
 	default:
