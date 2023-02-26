@@ -22,4 +22,6 @@ do
   mongo --eval 'db.levels.update({"original":ObjectId("'$acv'")}, {$set:{"requiresSubscription": false}});' coco
   mongo --eval 'db.campaigns.update({"name":"Dungeon"}, {$set:{"levels.'$acv'.requiresSubscription":false}});' coco
 done < ../../doc/campaign/achievements.txt
+# 特殊逻辑, 更新部分不符合统一命名规则的奖励关卡
+mongo --eval 'db.achievements.update({"slug":"second-kithmaze-complete"}, {$set: {"rewards.levels": ["54d24c49bf87255405a8f834"]}});' coco
 rm main
