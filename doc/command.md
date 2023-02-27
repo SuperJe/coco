@@ -1,28 +1,53 @@
 [toc]
-# 更新
+# mongo
 ## 更新权限
+```
+# 从数组中删除
+db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
+db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
+# 修改数组某元素值
 db.levels.update(
   {"original":ObjectId("5a5f6fe6dfafb6002b2b5b36"), "permissions.access":"read"},
   {'$set':{'permissions.$.target':'63e999f122b0ec015d2df745"'}}
 )
+```
 
 ## 更新订阅状态
+```
 db.campaigns.update({"name":"Dungeon"}, {$set:{"levels.54527a6257e83800009730c7.requiresSubscription":false}})
 db.levels.update({"original":ObjectId("54527a6257e83800009730c7")}, $set:{"requiresSubscription": false})
+```
 
 ##  更新奖励
 ## 删除某个奖励关卡
+```
+db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
+```
 db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
 
-# 删除一个嵌套文档key
+## 删除一个嵌套文档key
+```
 db.campaigns.update(
   {"_id":ObjectId("549f07f7e21e041139ef28c7")},
   {"$unset":{"levels.5a5f6fe6dfafb6002b2b5b36":""}}
 )
+```
 
-# copy某个集合
-## copy campaigns
+## copy某个集合
+### copy campaigns
+```
 db.campaignstmp.find().forEach(function(doc){ db.campaigns.insert(doc) })
+```
 
-## copy achievements
+### copy achievements
+```
 db.achievementstmp.find().forEach(function(doc){ db.achievements.insert(doc) })
+```
+
+# Docker
+```
+# 拷贝进容器
+docker cp 本地路径 容器ID:容器路径
+# 拷贝出容器
+docker cp 容器ID:容器路径 本地路径
+```
