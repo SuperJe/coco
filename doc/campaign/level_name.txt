@@ -37,8 +37,6 @@ id: 57ba8b472048774c002a12ac,          name:严酷考验 B
 id: 541b434e1ccc8eaae19f3c33,          name:Kithmaze最终历险
 id: 541c9a30c6362edfb0f34479,          name:Kithgard之门
 
-
-
 not selected:
 id: 55525bcaaf92058705a94c02,    name:Kithgard精通
 id: 54cfc6e2d06e8152051eb8a4,    name:不祥的征兆
