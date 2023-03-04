@@ -26,4 +26,11 @@ do
 done < ../../doc/campaign/achievements.txt
 # 特殊逻辑, 更新部分不符合统一命名规则的奖励关卡
 mongo --eval 'db.achievements.update({"slug":"second-kithmaze-complete"}, {$set: {"rewards.levels": ["54d24c49bf87255405a8f834"]}});' coco
+# 重新设置背景图片和背景填充颜色
+mongo --eval 'db.campaigns.update({"name":"Dungeon", "backgroundImage.width":1366}, {$set: {"backgroundImage.$.image":"../images/dungeon-bk1.jpg"}});' coco
+mongo --eval 'db.campaigns.update({"name":"Dungeon", "backgroundImage.width":1920}, {$set: {"backgroundImage.$.image":"../images/dungeon-bk1.jpg"}});' coco
+mongo --eval 'db.campaigns.update({"name":"Dungeon"}, {$set: {"backgroundColor": "rgba(45, 45, 45, 1)"}});' coco
+mongo --eval 'db.campaigns.update({"name":"Dungeon"}, {$set: {"backgroundColorTransparent": "rgba(45, 45, 45, 0)"}});' coco
+# 重新设置关卡坐标
+mongo --eval ';' coco
 rm main
