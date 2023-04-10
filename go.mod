@@ -2,7 +2,10 @@ module coco
 
 go 1.17
 
-require go.mongodb.org/mongo-driver v1.10.6
+require (
+	github.com/BurntSushi/toml v1.2.1
+	go.mongodb.org/mongo-driver v1.10.6
+)
 
 require (
 	github.com/golang/snappy v0.0.1 // indirect

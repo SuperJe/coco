@@ -10,18 +10,20 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+// ClientConfig 配置文件
 type ClientConfig struct {
 	URI     string
 	DB      string // default DB
 	Timeout time.Duration
 }
 
+// Client 客户端
 type Client struct {
 	db  string
 	cli *mongo.Client
 }
 
-// NewClient new mongo client
+// NewClient 通用mongo client
 func NewClient(c *ClientConfig) (*Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), c.Timeout)
 	defer cancel()
@@ -35,28 +37,39 @@ func NewClient(c *ClientConfig) (*Client, error) {
 	return &Client{db: c.DB, cli: cli}, err
 }
 
-func (c *Client) Find(ctx context.Context) (interface{}, error) {
-	cursor, err := c.cli.Database(c.db).Collection("users").Find(ctx, bson.M{"name": "codeMagic"})
+// NewCocoClient 本机coco数据库的mongo client
+func NewCocoClient() (*Client, error) {
+	c := &ClientConfig{
+		URI:     "mongodb://127.0.0.1:27017",
+		DB:      "coco",
+		Timeout: time.Second * 5,
+	}
+	return NewClient(c)
+}
+
+// FindOne 匹配一条数据
+func (c *Client) FindOne(ctx context.Context, collection string, filter bson.M, v interface{}) error {
+	r := c.cli.Database(c.db).Collection(collection).FindOne(ctx, filter)
+	if r.Err() != nil {
+		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
+		return r.Err()
+	}
+	return r.Decode(v)
+}
+
+// UpdateOne 更新一条数据
+func (c *Client) UpdateOne(ctx context.Context, collection string, filter, updater interface{}) error {
+	result, err := c.cli.Database(c.db).Collection(collection).UpdateOne(ctx, filter, updater)
 	if err != nil {
-		return nil, err
+		return err
 	}
-
-	defer func() {
-		if err := cursor.Close(ctx); err != nil {
-			fmt.Println("cursor close err:", err.Error())
-		}
-	}()
-
-	values, err := cursor.Current.Values()
-	if err != nil {
-		fmt.Println("values err:", err.Error())
-		panic(err)
+	if result.MatchedCount != 0 {
+		fmt.Println("matched and replaced an existing document")
 	}
+	return nil
+}
 
-	fmt.Println("values len:", len(values))
-	for _, value := range values {
-		fmt.Println("value:", string(value.Value))
-	}
-	fmt.Println("current cursor:", cursor.Current.String())
-	return nil, nil
+// Collection 指定集合
+func (c *Client) Collection(collection string) *mongo.Collection {
+	return c.cli.Database(c.db).Collection(collection)
 }

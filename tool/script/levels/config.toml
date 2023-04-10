@@ -1,0 +1,12 @@
+src_slug = "breakout"
+dst_slug = "magic-001"
+campaign_name = "Dungeon"
+dst_name = "一逼关卡"
+description = "这是一逼的关卡"
+loading_tip = "这是一逼的加载提示语"
+keep_fields = ["_id", "original", "index", "slug", "creator", "watchers", "permissions", "name"]
+
+[position]
+x = 30
+y = 30
+
