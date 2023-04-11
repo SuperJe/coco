@@ -59,4 +59,6 @@ db.levels.find().forEach(function(doc){ db.levelsback.insert(doc) })
 docker cp 本地路径 容器ID:容器路径
 # 拷贝出容器
 docker cp 容器ID:容器路径 本地路径
+# 挂载共享卷, 暴露多端口
+docker run -itd --name cc -v /Users/jianli.yue/MyCode/docker_share:/home/coco/codecombat/data  -p 0.0.0.0:3020:3000 -p0.0.0.0:27018:27017 operepo/ope-codecombat /bin/bash
 ```
