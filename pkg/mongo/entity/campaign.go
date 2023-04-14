@@ -6,9 +6,10 @@ type Campaign struct {
 	Name     string                 `bson:"name"`
 	FullName string                 `bson:"fullName"`
 	Levels   map[string]*LevelBrief `bson:"levels"`
+	I18Ns    map[string]*I18N       `bson:"i18n"`
 }
 
-// LevelBrief 在战役中有非常多的小关卡, 此为保存在战役结构中的小关卡的关键数据结构
+// LevelBrief 在战役中有非常多的小关卡, 此为保存在Campaign结构中的小关卡的关键数据结构
 type LevelBrief struct {
 	Concepts []string         `bson:"concepts"`
 	Slug     string           `bson:"slug"`
@@ -21,8 +22,9 @@ type LevelBrief struct {
 // I18N 顾名思义
 type I18N struct {
 	Name       string `bson:"name"`
+	FullName   string `bson:"fullName,omitempty"`
 	Desc       string `bson:"description"`
-	LoadingTip string `bson:"loadingTip"`
+	LoadingTip string `bson:"loadingTip,omitempty"`
 }
 
 // CampaignAll 旨在构建完整的Campaign结构, 并非简要结构, 未来发现新字段可以往里面一个一个加

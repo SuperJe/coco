@@ -47,9 +47,28 @@ func NewCocoClient() (*Client, error) {
 	return NewClient(c)
 }
 
+// NewCocoClient2 宿主机连接coco数据库的mongo client
+// 在容器中暴露27017的端口映射到27018的宿主机上, 所以这里访问27018端口
+// 来实现在宿主机上访问容器内的mongo
+func NewCocoClient2() (*Client, error) {
+	c := &ClientConfig{
+		URI:     "mongodb://127.0.0.1:27018",
+		DB:      "coco",
+		Timeout: time.Second * 5,
+	}
+	return NewClient(c)
+}
+
+// Find 查找全部
+func (c *Client) Find(ctx context.Context, collection string,
+	filter bson.M, opts ...*options.FindOptions) (*mongo.Cursor, error) {
+	return c.Collection(collection).Find(ctx, filter, opts...)
+}
+
 // FindOne 匹配一条数据
-func (c *Client) FindOne(ctx context.Context, collection string, filter bson.M, v interface{}) error {
-	r := c.cli.Database(c.db).Collection(collection).FindOne(ctx, filter)
+func (c *Client) FindOne(ctx context.Context, collection string,
+	filter bson.M, v interface{}, opts ...*options.FindOneOptions) error {
+	r := c.Collection(collection).FindOne(ctx, filter, opts...)
 	if r.Err() != nil {
 		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
 		return r.Err()

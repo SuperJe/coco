@@ -10,7 +10,7 @@ type EarnAchievements struct {
 }
 
 type EarnedRewards struct {
-	Items  []string `bson:"items"`
-	Levels []string `bson:"levels"`
-	Gems   int64    `bson:"gems"`
+	Items  []string `bson:"items,omitempty"`
+	Levels []string `bson:"levels,omitempty"`
+	Gems   int64    `bson:"gems,omitempty"`
 }
