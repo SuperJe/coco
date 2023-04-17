@@ -3,9 +3,9 @@ package mongo
 import (
 	"context"
 	"fmt"
-
 	"github.com/SuperJe/coco/pkg/i18n"
 	"github.com/SuperJe/coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/util/stringutil"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -82,7 +82,7 @@ func (c *Client) GroupLevelByCampaign(ctx context.Context, levels []string) (map
 		objLevels = append(objLevels, objID)
 	}
 	filter := bson.M{"original": bson.M{"$in": objLevels}}
-	opts := options.Find().SetProjection(bson.D{{"terrain", 1}, {"original", 1}})
+	opts := options.Find().SetProjection(bson.D{{"campaign", 1}, {"original", 1}})
 	cursor, err := c.Find(ctx, collectionLevel, filter, opts)
 	if err != nil {
 		return nil, errors.Wrap(err, "Find err")
@@ -94,7 +94,8 @@ func (c *Client) GroupLevelByCampaign(ctx context.Context, levels []string) (map
 
 	grouped := make(map[string][]string)
 	for _, result := range results {
-		grouped[result.CampaignName] = append(grouped[result.CampaignName], result.Original.Hex())
+		camp := stringutil.CapFirstLetter(result.CampaignName)
+		grouped[camp] = append(grouped[camp], result.Original.Hex())
 	}
 	return grouped, nil
 }

@@ -85,6 +85,7 @@ func getCampProgressions() {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("completed:", util.JSONString(completed))
 	progressions := &CampaignProgression{}
 	progressions.Dungeon = buildProgression("Dungeon", completed, counts)
 	progressions.Forest = buildProgression("Forest", completed, counts)

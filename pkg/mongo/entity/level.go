@@ -6,7 +6,7 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 type Level struct {
 	Slug         string             `bson:"slug"`
 	EnName       string             `bson:"name"`
-	CampaignName string             `bson:"terrain"` // 对应Campaign集合的name
+	CampaignName string             `bson:"campaign"` // 对应Campaign集合的name
 	I18Ns        map[string]*I18N   `bson:"i18n"`
 	Original     primitive.ObjectID `bson:"original,omitempty"`
 }
