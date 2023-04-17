@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"coco/pkg/i18n"
-	"coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/i18n"
+	"github.com/SuperJe/coco/pkg/mongo/entity"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -22,7 +22,7 @@ func (c *Client) GetUserByName(ctx context.Context, name string) (*entity.User, 
 	return user, nil
 }
 
-// GetCompletedLevels 获取用户已完成的关卡
+// GetCompletedLevels 获取用户已完成的关卡, name是用户的user name
 func (c *Client) GetCompletedLevels(ctx context.Context, name string) ([]string, error) {
 	// 先查用户的id
 	user, err := c.GetUserByName(ctx, name)
@@ -49,7 +49,7 @@ func (c *Client) GetCompletedLevels(ctx context.Context, name string) ([]string,
 	return levels, nil
 }
 
-// GetCampaignZhHansName 英文名转中文
+// GetCampaignZhHansName 英文名转中文, 如Dungeon->地牢
 func (c *Client) GetCampaignZhHansName(ctx context.Context, names []string) (map[string]string, error) {
 	filter := bson.M{"name": bson.M{"$in": names}}
 	opts := options.Find().SetProjection(bson.D{{"i18n", 1}, {"name", 1}})
@@ -71,7 +71,7 @@ func (c *Client) GetCampaignZhHansName(ctx context.Context, names []string) (map
 }
 
 // GroupLevelByCampaign 按campaign分类level
-// 查level集合, 拿出campaign的英文名字, 再查campaign集合查出中文名
+// 查level集合, 拿出campaign的英文名字, 根据英文名字来分类, 如Dungeon -> {"level1", "level2"}
 func (c *Client) GroupLevelByCampaign(ctx context.Context, levels []string) (map[string][]string, error) {
 	objLevels := make([]primitive.ObjectID, 0, len(levels))
 	for _, level := range levels {
@@ -100,7 +100,7 @@ func (c *Client) GroupLevelByCampaign(ctx context.Context, levels []string) (map
 }
 
 // CountLevels 计算每个campaign的level数量
-// 返回 campaign.Name -> 数量
+// 返回 campaign.Name -> 数量, 如Dungeon->56
 func (c *Client) CountLevels(ctx context.Context) (map[string]int32, error) {
 	camps := []string{"Dungeon", "Forest", "Desert", "Mountain", "Glacier"}
 	filter := bson.M{"name": bson.M{"$in": camps}}

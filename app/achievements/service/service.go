@@ -1,11 +1,11 @@
 package service
 
 import (
-	"coco/pkg/mongo"
-	"coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/mongo"
+	"github.com/SuperJe/coco/pkg/mongo/entity"
 )
 
 type Service struct {
-	mgo    *mongo.Client
+	mgo *mongo.Client
 	earned *entity.EarnAchievements
 }

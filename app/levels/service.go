@@ -5,9 +5,9 @@ import (
 	"flag"
 	"fmt"
 
-	"coco/pkg/mongo"
-	"coco/pkg/mongo/entity"
 	"github.com/BurntSushi/toml"
+	"github.com/SuperJe/coco/pkg/mongo"
+	"github.com/SuperJe/coco/pkg/mongo/entity"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

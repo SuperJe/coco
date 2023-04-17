@@ -9,9 +9,9 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"coco/pkg/mongo"
-	"coco/pkg/mongo/entity"
-	"coco/pkg/util/sliceutil"
+	"github.com/SuperJe/coco/pkg/mongo"
+	"github.com/SuperJe/coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/util/sliceutil"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

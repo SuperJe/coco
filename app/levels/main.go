@@ -5,8 +5,8 @@ import (
 	"flag"
 	"fmt"
 
-	"coco/pkg/mongo/entity"
-	"coco/pkg/util/sliceutil"
+	"github.com/SuperJe/coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/util/sliceutil"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"

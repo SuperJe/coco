@@ -1,8 +1,8 @@
 package cmd
 
 import (
-	"coco/pkg/mongo"
-	"coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/mongo"
+	"github.com/SuperJe/coco/pkg/mongo/entity"
 )
 
 var (
