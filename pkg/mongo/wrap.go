@@ -1,10 +1,10 @@
 package mongo
 
 import (
-	"coco/pkg/i18n"
 	"context"
 	"fmt"
 
+	"coco/pkg/i18n"
 	"coco/pkg/mongo/entity"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -92,21 +92,31 @@ func (c *Client) GroupLevelByCampaign(ctx context.Context, levels []string) (map
 		return nil, errors.Wrap(err, "cursor.All err")
 	}
 
-	names := make([]string, 0)
-	for _, result := range results {
-		names = append(names, result.CampaignName)
-	}
-	nameMap, err := c.GetCampaignZhHansName(ctx, names)
-	if err != nil {
-		return nil, errors.Wrap(err, "c.GetCampaignZhHansName err")
-	}
 	grouped := make(map[string][]string)
 	for _, result := range results {
-		name, ok := nameMap[result.CampaignName]
-		if !ok {
-			return nil, errors.Wrapf(err, "campaign name:%s not mapping", result.CampaignName)
-		}
-		grouped[name] = append(grouped[name], result.Original.Hex())
+		grouped[result.CampaignName] = append(grouped[result.CampaignName], result.Original.Hex())
 	}
 	return grouped, nil
+}
+
+// CountLevels 计算每个campaign的level数量
+// 返回 campaign.Name -> 数量
+func (c *Client) CountLevels(ctx context.Context) (map[string]int32, error) {
+	camps := []string{"Dungeon", "Forest", "Desert", "Mountain", "Glacier"}
+	filter := bson.M{"name": bson.M{"$in": camps}}
+	opts := options.Find().SetProjection(bson.D{{"name", 1}, {"levels", 1}})
+	cursor, err := c.Find(ctx, collectionCamp, filter, opts)
+	if err != nil {
+		return nil, errors.Wrap(err, "c.Find err")
+	}
+	var result []*entity.Campaign
+	if err := cursor.All(ctx, &result); err != nil {
+		return nil, errors.Wrap(err, "cursor.All err")
+	}
+
+	counts := make(map[string]int32, len(camps))
+	for _, r := range result {
+		counts[r.Name] = int32(len(r.Levels))
+	}
+	return counts, nil
 }

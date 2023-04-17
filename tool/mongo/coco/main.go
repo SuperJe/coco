@@ -1,6 +1,7 @@
 package main
 
 import (
+	"coco/pkg/util"
 	"context"
 	"fmt"
 
@@ -39,6 +40,14 @@ func nameMapping() {
 	fmt.Printf("mapping:%+v\n", mapping)
 }
 
+func countsLevel() {
+	counts, err := cli.CountLevels(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("counts:", util.JSONString(counts))
+}
+
 func main() {
 	var err error
 	cli, err = mongo.NewCocoClient2()
@@ -46,6 +55,7 @@ func main() {
 		panic(err)
 	}
 	// getUserByName()
-	getEarnedLevels()
+	// getEarnedLevels()
 	// nameMapping()
+	countsLevel()
 }

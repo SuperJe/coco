@@ -3,6 +3,7 @@ package util
 import (
 	"bytes"
 	"encoding/gob"
+	"encoding/json"
 )
 
 // DeepCopy 使用gob序列化, 默认不使用json是因为json不能序列化为未导出的数据
@@ -14,4 +15,10 @@ func DeepCopy(src, dst interface{}) error {
 		return err
 	}
 	return dec.Decode(dst)
+}
+
+// JSONString 序列化为json, 忽略错误
+func JSONString(v interface{}) string {
+	bs, _ := json.Marshal(v)
+	return string(bs)
 }
