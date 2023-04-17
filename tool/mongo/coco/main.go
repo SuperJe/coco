@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/SuperJe/coco/pkg/mongo"
 	"github.com/SuperJe/coco/pkg/util"
@@ -71,6 +72,7 @@ func buildProgression(campaign string, completed map[string][]string, counts map
 }
 
 func getCampProgressions() {
+	start := time.Now()
 	counts, err := cli.CountLevels(context.Background())
 	if err != nil {
 		panic(err)
@@ -90,6 +92,7 @@ func getCampProgressions() {
 	progressions.Mountain = buildProgression("Mountain", completed, counts)
 	progressions.Glacier = buildProgression("Glacier", completed, counts)
 	fmt.Printf("CampaignProgression:%s\n", util.JSONString(progressions))
+	fmt.Printf("cost:%+v\n", time.Since(start))
 }
 
 func main() {
