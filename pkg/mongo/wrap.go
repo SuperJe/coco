@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"fmt"
+
 	"github.com/SuperJe/coco/pkg/i18n"
 	"github.com/SuperJe/coco/pkg/mongo/entity"
 	"github.com/SuperJe/coco/pkg/util/stringutil"
@@ -20,6 +21,20 @@ func (c *Client) GetUserByName(ctx context.Context, name string) (*entity.User, 
 		return nil, errors.Wrap(err, "FindOne err")
 	}
 	return user, nil
+}
+
+// GetUsers 获取所有用户信息, 当前只会返回name,earned和lastLevel
+func (c *Client) GetUsers(ctx context.Context) ([]*entity.User, error) {
+	opts := options.Find().SetProjection(bson.D{{"name", 1}, {"earned", 1}, {"lastLevel", 1}})
+	cursor, err := c.Find(ctx, collectionUser, nil, opts)
+	if err != nil {
+		return nil, errors.Wrap(err, "c.Find err")
+	}
+	var result []*entity.User
+	if err := cursor.All(ctx, &result); err != nil {
+		return nil, errors.Wrap(err, "cursor.All err")
+	}
+	return result, nil
 }
 
 // GetCompletedLevels 获取用户已完成的关卡, name是用户的user name

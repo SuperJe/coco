@@ -96,6 +96,14 @@ func getCampProgressions() {
 	fmt.Printf("cost:%+v\n", time.Since(start))
 }
 
+func getUsers() {
+	users, err := cli.GetUsers(context.Background())
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("users:", util.JSONString(users))
+}
+
 func main() {
 	var err error
 	cli, err = mongo.NewCocoClient2()
@@ -106,5 +114,6 @@ func main() {
 	// getEarnedLevels()
 	// nameMapping()
 	// countsLevel()
-	getCampProgressions()
+	// getCampProgressions()
+	getUsers()
 }

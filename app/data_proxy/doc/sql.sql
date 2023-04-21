@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS data_sync DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
+
