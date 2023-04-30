@@ -12,12 +12,13 @@ func main() {
 	}
 	r := gin.Default()
 	registerHandler(r, svc)
-	if err := r.Run(":9090"); err != nil {
+	if err := r.Run("127.0.0.1:7777"); err != nil {
 		panic(err)
 	}
 }
 
 // registerHandler 注册处理方法
 func registerHandler(r *gin.Engine, svc *service.Service) {
-	r.POST("/user", svc.UserProgression)
+	r.POST("/user_progression", svc.UpdateUserProgression)
+	r.GET("/user_progression", svc.GetUserProgression)
 }

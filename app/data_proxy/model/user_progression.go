@@ -1,13 +1,30 @@
 package model
 
-// UserProgressionReq user_progression接口body
-type UserProgressionReq struct {
-	Name        string `json:"name"`
-	LastLevel   string `json:"last_level"`
-	CompetedNum int64  `json:"competed_num"`
-	TotalLevels int64  `json:"total_levels"`
+type BaseRsp struct {
+	Code int32  `json:"code"`
+	Msg  string `json:"msg"`
 }
 
-// UserProgressionRsp user_progression接口response
-type UserProgressionRsp struct {
+type UpdateUserProgressionReq struct {
+	Name            string               `json:"name"`
+	Completed       int32                `json:"completed"`
+	Gems            int32                `json:"gems"`
+	LastLevel       string               `json:"last_level"`
+	CampProgression *CampaignProgression `json:"camp_progression"`
+}
+
+type UpdateUserProgressionRsp struct {
+	BaseRsp
+}
+
+type GetUserProgressionReq struct {
+	Name string `form:"name" json:"name"`
+}
+
+type GetUserProgressionRsp struct {
+	BaseRsp
+	Completed           int32                `json:"completed"`
+	Gems                int32                `json:"gems"`
+	LastLevel           string               `json:"last_level"`
+	CampaignProgression *CampaignProgression `json:"camp_progression"`
 }

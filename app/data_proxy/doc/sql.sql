@@ -1,2 +1,14 @@
 CREATE DATABASE IF NOT EXISTS data_sync DEFAULT CHARSET utf8 COLLATE utf8_general_ci;
 
+CREATE TABLE IF NOT EXISTS `user_progression`(
+    `id` bigint AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    `last_level` VARCHAR(255) NOT NULL,
+    `completed` int(10) NOT NULL DEFAULT 0,
+    `gems` int(10) NOT NULL DEFAULT 0,
+    `detail` TEXT,
+    `create_time` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `moditiyTime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY ( `id` ),
+    UNIQUE KEY (`name`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

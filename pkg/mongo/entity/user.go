@@ -21,3 +21,18 @@ func (u *User) Clone() *User {
 		Earned:    u.Earned,
 	}
 }
+
+// CompletedLevelCount 已完成的关卡数
+func (u *User) CompletedLevelCount() int32 {
+	if u == nil || u.Earned == nil {
+		return 0
+	}
+	return int32(len(u.Earned.Levels))
+}
+
+func (u *User) GemCount() int32 {
+	if u == nil || u.Earned == nil {
+		return 0
+	}
+	return int32(u.Earned.Gems)
+}
