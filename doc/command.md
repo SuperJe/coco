@@ -61,4 +61,7 @@ docker cp 本地路径 容器ID:容器路径
 docker cp 容器ID:容器路径 本地路径
 # 挂载共享卷, 暴露多端口
 docker run -itd --name cc -v /Users/jianli.yue/MyCode/docker_share:/home/coco/codecombat/data  -p 0.0.0.0:3020:3000 -p0.0.0.0:27018:27017 operepo/ope-codecombat /bin/bash
+# 运行mysql镜像
+docker run -itd --name mysql-admin -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
+
 ```
