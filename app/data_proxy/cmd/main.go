@@ -21,4 +21,5 @@ func main() {
 func registerHandler(r *gin.Engine, svc *service.Service) {
 	r.POST("/user_progression", svc.UpdateUserProgression)
 	r.GET("/user_progression", svc.GetUserProgression)
+	r.GET("/batch_user_progression", svc.BatchGetUserProgression)
 }

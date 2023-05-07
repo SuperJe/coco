@@ -28,3 +28,13 @@ type GetUserProgressionRsp struct {
 	LastLevel           string               `json:"last_level"`
 	CampaignProgression *CampaignProgression `json:"camp_progression"`
 }
+
+type BatchGetUserProgressionReq struct {
+	Bytes string   `form:"names" json:"names"`
+	Names []string `json:"-"`
+}
+
+type BatchGetUserProgressionRsp struct {
+	BaseRsp
+	CampProgressions map[string]*CampaignProgression `json:"camp_progressions"`
+}

@@ -65,3 +65,9 @@ docker run -itd --name cc -v /Users/jianli.yue/MyCode/docker_share:/home/coco/co
 docker run -itd --name mysql-admin -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 mysql
 
 ```
+
+# npm
+```
+npm install --save @vue/composition-api@1.3.0
+npm install vue-echarts@4
+```

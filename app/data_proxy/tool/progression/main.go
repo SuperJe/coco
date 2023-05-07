@@ -16,6 +16,44 @@ import (
 	"github.com/SuperJe/coco/pkg/mongo/entity"
 )
 
+var mgo *mongo.Client
+
+func batch(names []string) error {
+	bs, _ := json.Marshal(names)
+	req, err := http.NewRequest("GET", "http://127.0.0.1:7777/batch_user_progression", nil)
+	if err != nil {
+		return fmt.Errorf("http.NewRequest err:%s", err.Error())
+	}
+	params := req.URL.Query()
+	params.Add("names", string(bs))
+	req.URL.RawQuery = params.Encode()
+	rsp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return fmt.Errorf("http.DefaultClient.Do err:%s", err.Error())
+	}
+	defer func() {
+		if err := rsp.Body.Close(); err != nil {
+			_ = rsp.Body.Close()
+		}
+	}()
+	bs, err = ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return fmt.Errorf("ReadAll err:%s", err.Error())
+	}
+	if rsp.StatusCode != http.StatusOK {
+		return fmt.Errorf("http err code:%d", rsp.StatusCode)
+	}
+	data := &model.BatchGetUserProgressionRsp{}
+	if err := json.Unmarshal(bs, data); err != nil {
+		return errors.Wrap(err, "unmarshal err")
+	}
+	if data.Code != 0 {
+		return fmt.Errorf("batch get err:%s", data.Msg)
+	}
+	fmt.Println("data:", data.CampProgressions)
+	return nil
+}
+
 func update(user *entity.User, campProgression *model.CampaignProgression) error {
 	data := &model.UpdateUserProgressionReq{
 		Name:            user.Name,
@@ -85,19 +123,15 @@ func get(name string) error {
 }
 
 func getCampProgression(ctx context.Context, name string) (*model.CampaignProgression, error) {
-	cli, err := mongo.NewCocoClient2()
-	if err != nil {
-		return nil, errors.Wrap(err, "NewCocoClient2 err")
-	}
-	counts, err := cli.CountLevels(ctx)
+	counts, err := mgo.CountLevels(ctx)
 	if err != nil {
 		return nil, errors.Wrap(err, "cli.CountLevels err")
 	}
-	levels, err := cli.GetCompletedLevels(ctx, name)
+	levels, err := mgo.GetCompletedLevels(ctx, name)
 	if err != nil {
 		return nil, errors.Wrap(err, "cli.GetCompletedLevels err")
 	}
-	completed, err := cli.GroupLevelByCampaign(ctx, levels)
+	completed, err := mgo.GroupLevelByCampaign(ctx, levels)
 	if err != nil {
 		return nil, errors.Wrap(err, "cli.GroupLevelByCampaign err")
 	}
@@ -120,11 +154,13 @@ func buildProgression(campaign string, completed map[string][]string, counts map
 }
 
 func main() {
-	// TODO: 修改端口
-	cache := make(map[string]*entity.User, 100)
-	mgo, err := mongo.NewCocoClient2()
+	var err error
+	mgo, err = mongo.NewCocoClient2()
 	if err != nil {
 		panic(err)
+	}
+	if err := batch([]string{"codeMagic", "teacher_1", "test0001", "xxx", "jelly003"}); err != nil {
+		fmt.Println("batch err:", err.Error())
 	}
 	for {
 		users, err := mgo.GetUsers(context.Background())
@@ -133,11 +169,6 @@ func main() {
 		}
 		for _, user := range users {
 			if len(user.Name) == 0 {
-				continue
-			}
-			last, ok := cache[user.Name]
-			if ok && last.LastLevel == user.LastLevel {
-				fmt.Printf("user:%s stay the same level:%s\n", user.Name, user.LastLevel)
 				continue
 			}
 			campProgression, err := getCampProgression(context.Background(), user.Name)
@@ -149,11 +180,10 @@ func main() {
 				fmt.Println("doRequest err:", err.Error())
 				continue
 			}
-			if err := get(user.Name); err != nil {
-				fmt.Println("get err:", err.Error())
-				continue
-			}
-			cache[user.Name] = user.Clone()
+			// if err := get(user.Name); err != nil {
+			// 	fmt.Println("get err:", err.Error())
+			// 	continue
+			// }
 		}
 		time.Sleep(3 * time.Second)
 	}

@@ -1,12 +1,71 @@
 package entity
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import (
+	"fmt"
+	"github.com/SuperJe/coco/pkg/util/encode"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"strings"
+	"time"
+)
 
 type User struct {
-	ID        primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	Name      string             `bson:"name" json:"name,omitempty"`
-	LastLevel string             `bson:"lastLevel"`
-	Earned    *EarnedRewards     `bson:"earned" json:"earned,omitempty"`
+	ID                primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	Name              string             `bson:"name,omitempty" json:"name,omitempty"`
+	NameLower         string             `bson:"nameLower,omitempty" json:"-"`
+	LastLevel         string             `bson:"lastLevel,omitempty"`
+	Earned            *EarnedRewards     `bson:"earned,omitempty" json:"earned,omitempty"`
+	CreateOnHost      string             `bson:"createOnHost,omitempty" json:"-"`
+	LastIP            string             `bson:"lastIP,omitempty" json:"-"`
+	PreferredLanguage string             `bson:"preferredLanguage,omitempty" json:"-"`
+	TestGroupNumber   int32              `bson:"testGroupNumber,omitempty" json:"-"`
+	Anonymous         bool               `bson:"anonymous,omitempty" json:"-"`
+	DateCreated       time.Time          `bson:"dateCreated,omitempty" json:"-"`
+	V                 int32              `bson:"__v" json:"-"`
+	Referrer          string             `bson:"referrer,omitempty" json:"-"`
+	Birthday          string             `bson:"birthday,omitempty" json:"-"`
+	Email             string             `bson:"email,omitempty" json:"-"`
+	EmailLower        string             `bson:"emailLower,omitempty" json:"-"`
+	PWDHash           string             `bson:"passwordHash,omitempty" json:"-"`
+	Slug              string             `bson:"slug,omitempty" json:"-"`
+	Emails            struct {
+		GeneralNews struct {
+			Enabled bool `bson:"enabled"`
+		} `bson:"generalNews"`
+	} `bson:"emails"`
+}
+
+// NewUser 返回注册一个用户的所有信息
+func NewUser(name, pwd string) *User {
+	email := fmt.Sprintf("%d@qq.com", time.Now().UnixMilli())
+	return &User{
+		ID:                primitive.NewObjectID(),
+		Name:              name,
+		NameLower:         strings.ToLower(name),
+		CreateOnHost:      "localhost:3020",
+		LastIP:            "::ffff:172.17.0.1",
+		PreferredLanguage: "zh-HANS",
+		TestGroupNumber:   250,
+		Anonymous:         false,
+		DateCreated:       time.Now(),
+		V:                 0,
+		Referrer:          "http://localhost:3020/",
+		Birthday:          time.Now().Format("2006-01-02 15:04:05"),
+		Email:             email,
+		EmailLower:        strings.ToLower(email),
+		PWDHash:           encode.Sha512WithSalt(pwd, "pepper"),
+		Slug:              name,
+		Emails: struct {
+			GeneralNews struct {
+				Enabled bool `bson:"enabled"`
+			} `bson:"generalNews"`
+		}{
+			GeneralNews: struct {
+				Enabled bool `bson:"enabled"`
+			}{
+				Enabled: false,
+			},
+		},
+	}
 }
 
 // Clone 深拷贝

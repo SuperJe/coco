@@ -136,3 +136,12 @@ func (c *Client) CountLevels(ctx context.Context) (map[string]int32, error) {
 	}
 	return counts, nil
 }
+
+// RegisterUser 新建一个用户
+func (c *Client) RegisterUser(ctx context.Context, name, pwd string) error {
+	user := entity.NewUser(name, pwd)
+	if err := c.InsertOne(ctx, collectionUser, user); err != nil {
+		return errors.Wrap(err, "c.InsertOne err")
+	}
+	return nil
+}
