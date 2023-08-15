@@ -5,9 +5,9 @@ import (
 	"crypto/sha512"
 	"encoding/hex"
 	"fmt"
-	"github.com/SuperJe/coco/pkg/mongo"
-	"github.com/SuperJe/coco/pkg/util/encode"
 	"strings"
+
+	"github.com/SuperJe/coco/pkg/mongo"
 )
 
 func hashPassword(password string) string {
@@ -36,6 +36,6 @@ func registerUser(name, pwd string) {
 }
 
 func main() {
-	fmt.Println("pwd:", encode.Sha512WithSalt("jelly003", "pepper"))
-	// registerUser("jelly001", "jelly001")
+	// fmt.Println("pwd:", encode.Sha512WithSalt("jelly003", "pepper"))
+	registerUser("Director Yan", "Director Yan")
 }

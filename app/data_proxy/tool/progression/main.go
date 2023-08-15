@@ -5,15 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"time"
-
-	"github.com/pkg/errors"
-
 	"github.com/SuperJe/coco/app/data_proxy/model"
 	"github.com/SuperJe/coco/pkg/mongo"
 	"github.com/SuperJe/coco/pkg/mongo/entity"
+	"github.com/SuperJe/coco/pkg/util"
+	"github.com/pkg/errors"
+	"io/ioutil"
+	"net/http"
+	"time"
 )
 
 var mgo *mongo.Client
@@ -163,6 +162,7 @@ func main() {
 		fmt.Println("batch err:", err.Error())
 	}
 	for {
+		time.Sleep(3 * time.Second)
 		users, err := mgo.GetUsers(context.Background())
 		if err != nil {
 			panic(err)
@@ -173,8 +173,11 @@ func main() {
 			}
 			campProgression, err := getCampProgression(context.Background(), user.Name)
 			if err != nil {
-				fmt.Println("getCampProgression err:", err.Error())
+				fmt.Printf("user %s getCampProgression err:%s\n", user.Name, err.Error())
 				continue
+			}
+			if user.Name == "teacher010" {
+				fmt.Println("progression:", util.JSONString(campProgression))
 			}
 			if err := update(user, campProgression); err != nil {
 				fmt.Println("doRequest err:", err.Error())
@@ -185,6 +188,5 @@ func main() {
 			// 	continue
 			// }
 		}
-		time.Sleep(3 * time.Second)
 	}
 }

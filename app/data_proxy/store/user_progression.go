@@ -79,9 +79,5 @@ func (s *Store) BatchGetUserProgressions(names []string) (UserProgressions, erro
 	if err := s.mysql.Table(UserProgression{}.TableName()).In("name", names).Find(&progressions); err != nil {
 		return nil, err
 	}
-	fmt.Printf("len:%d\n", len(progressions))
-	for _, progression := range progressions {
-		fmt.Printf("p:%+v\n", progression)
-	}
 	return progressions, nil
 }

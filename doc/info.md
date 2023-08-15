@@ -72,3 +72,20 @@
     }
 ]
 ```
+
+## 代码
+### 语言包
+/home/coco/codecombat/app/locale/zh-HANS.coffee
+ 
+### 图片替换
+主路径: ./app/assets/images
+/home/coco/codecombat/public/images/pages/play/portal-campaigns.png
+
+/home/coco/codecombat/public/images/pages/base/logo.png
+
+/home/coco/codecombat/public/images/pages/home/student_jumbotron.jpg
+
+### 关卡发布步骤
++ 制作关卡, 制作成就，要指定achievements的level。
++ 运行工具:
+  + 工具会把该关卡扫出来，添加到campaign中，并且修改level所属的campaign。

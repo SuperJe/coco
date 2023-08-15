@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/SuperJe/coco/pkg/util/encode"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -34,6 +35,17 @@ type User struct {
 	} `bson:"emails"`
 }
 
+func userNameSlugify(name string) string {
+	// 将所有字母字符转换为小写
+	name = strings.ToLower(name)
+	// 使用正则表达式匹配非字母字符并替换为空格
+	reg := regexp.MustCompile("[^a-z]+")
+	name = reg.ReplaceAllString(name, " ")
+	// 使用空格分隔单词，并将单词连接成 slug 形式
+	words := strings.Fields(name)
+	return strings.Join(words, "-")
+}
+
 // NewUser 返回注册一个用户的所有信息
 func NewUser(name, pwd string) *User {
 	email := fmt.Sprintf("%d@qq.com", time.Now().UnixMilli())
@@ -53,7 +65,7 @@ func NewUser(name, pwd string) *User {
 		Email:             email,
 		EmailLower:        strings.ToLower(email),
 		PWDHash:           encode.Sha512WithSalt(pwd, "pepper"),
-		Slug:              name,
+		Slug:              userNameSlugify(name),
 		Emails: struct {
 			GeneralNews struct {
 				Enabled bool `bson:"enabled"`

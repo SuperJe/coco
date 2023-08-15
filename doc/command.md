@@ -18,19 +18,30 @@ db.campaigns.update({"name":"Dungeon"}, {$set:{"levels.54527a6257e83800009730c7.
 db.levels.update({"original":ObjectId("54527a6257e83800009730c7")}, $set:{"requiresSubscription": false})
 ```
 
-##  更新奖励
+##  更新
 ## 删除某个奖励关卡
 ```
 db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
 ```
 db.achievements.update( {"slug":"shadow-guard-complete"}, {$pull:{ "rewards.levels": "54ca592de4983255055a5478"}})
 
-## 删除一个嵌套文档key
+## 更新宝石数量
+```
+db.users.update({"name":"teacher007"}, {$set: {"earned.gems":800}})
+```
+
+## 删除
+### 删除地牢的某个关卡
 ```
 db.campaigns.update(
   {"_id":ObjectId("549f07f7e21e041139ef28c7")},
-  {"$unset":{"levels.63eb926b1b3a890077b78b1c":""}}
+  {"$unset":{"levels.64d4b02ce7cdd400c2b06194":""}}
 )
+```
+
+### 删除levels集合中的某个文档
+```
+db.levels.deleteOne({"_id":ObjectId("64d5fa9620759400c82e055d")})
 ```
 
 ## copy某个集合

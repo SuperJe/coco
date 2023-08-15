@@ -2,7 +2,6 @@ package service
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -22,7 +21,6 @@ func (s *Service) BatchGetUserProgression(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, "unmarshal err")
 		return
 	}
-	fmt.Printf("bs:%s, names:%+v\n\n", string(req.Bytes), req.Names)
 	progressions, err := s.store.BatchGetUserProgressions(req.Names)
 	if err != nil {
 		rsp.Msg = "get err:" + err.Error()
