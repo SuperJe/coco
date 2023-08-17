@@ -88,6 +88,16 @@ func (c *Client) UpdateOne(ctx context.Context, collection string, filter, updat
 	return nil
 }
 
+// InsertOne 插入一条数据
+func (c *Client) InsertOne(ctx context.Context, collection string, doc interface{}) error {
+	res, err := c.Collection(collection).InsertOne(ctx, doc)
+	if err != nil {
+		return err
+	}
+	fmt.Println("insertID:", res.InsertedID)
+	return nil
+}
+
 // Collection 指定集合
 func (c *Client) Collection(collection string) *mongo.Collection {
 	return c.cli.Database(c.db).Collection(collection)

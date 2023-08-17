@@ -12,3 +12,5 @@ CREATE TABLE IF NOT EXISTS `user_progression`(
     PRIMARY KEY ( `id` ),
     UNIQUE KEY (`name`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE sys_user MODIFY remark TEXT;

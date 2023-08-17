@@ -12,7 +12,7 @@ func main() {
 	}
 	r := gin.Default()
 	registerHandler(r, svc)
-	if err := r.Run("127.0.0.1:7777"); err != nil {
+	if err := r.Run("0.0.0.0:7777"); err != nil {
 		panic(err)
 	}
 }
@@ -21,4 +21,6 @@ func main() {
 func registerHandler(r *gin.Engine, svc *service.Service) {
 	r.POST("/user_progression", svc.UpdateUserProgression)
 	r.GET("/user_progression", svc.GetUserProgression)
+	r.GET("/batch_user_progression", svc.BatchGetUserProgression)
+	r.POST("/register", svc.Register)
 }

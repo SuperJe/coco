@@ -41,7 +41,7 @@ func newService() (*Service, error) {
 	if len(c.SrcSlug) == 0 || len(c.DstSlug) == 0 || len(c.Campaign) == 0 {
 		return nil, fmt.Errorf("config err:\n%+v", c)
 	}
-	mgo, err := mongo.NewCocoClient()
+	mgo, err := mongo.NewCocoClient2()
 	if err != nil {
 		panic(err)
 	}

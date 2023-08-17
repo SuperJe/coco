@@ -1,8 +1,9 @@
 package mongo
 
 const (
-	collectionLevel  = "levels"
-	collectionUser   = "users"
-	collectionCamp   = "campaigns"
-	collectionEarned = "earnedachievements"
+	CollectionLevel  = "levels"
+	CollectionUser   = "users"
+	CollectionCamp   = "campaigns"
+	CollectionEarned = "earnedachievements"
+	CollectionAcv    = "achievements"
 )

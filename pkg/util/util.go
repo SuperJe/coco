@@ -22,3 +22,8 @@ func JSONString(v interface{}) string {
 	bs, _ := json.Marshal(v)
 	return string(bs)
 }
+
+// EmptyS 校验字符串是否为空
+func EmptyS(s string) bool {
+	return len(s) == 0
+}

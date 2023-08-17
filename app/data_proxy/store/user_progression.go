@@ -24,6 +24,17 @@ func NewUserProgression(req *model.UpdateUserProgressionReq) *UserProgression {
 	}
 }
 
+type UserProgressions []*UserProgression
+
+func (ups UserProgressions) GroupByName() map[string]*model.CampaignProgression {
+	result := make(map[string]*model.CampaignProgression, len(ups))
+	for _, up := range ups {
+		up := up
+		result[up.Name] = up.Detail
+	}
+	return result
+}
+
 func (up UserProgression) TableName() string {
 	return "user_progression"
 }
@@ -61,4 +72,12 @@ func (s *Store) GetUserProgression(name string) (*UserProgression, error) {
 		return nil, nil
 	}
 	return up, nil
+}
+
+func (s *Store) BatchGetUserProgressions(names []string) (UserProgressions, error) {
+	progressions := make([]*UserProgression, 0)
+	if err := s.mysql.Table(UserProgression{}.TableName()).In("name", names).Find(&progressions); err != nil {
+		return nil, err
+	}
+	return progressions, nil
 }
