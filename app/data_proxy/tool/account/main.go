@@ -37,5 +37,5 @@ func registerUser(name, pwd string) {
 
 func main() {
 	// fmt.Println("pwd:", encode.Sha512WithSalt("jelly003", "pepper"))
-	registerUser("Director Yan", "Director Yan")
+	registerUser("Will Yue", "Will Yue")
 }

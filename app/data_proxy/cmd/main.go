@@ -12,7 +12,7 @@ func main() {
 	}
 	r := gin.Default()
 	registerHandler(r, svc)
-	if err := r.Run("127.0.0.1:7777"); err != nil {
+	if err := r.Run("0.0.0.0:7777"); err != nil {
 		panic(err)
 	}
 }

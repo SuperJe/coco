@@ -4,18 +4,26 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"flag"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"time"
+
+	"github.com/pkg/errors"
+
 	"github.com/SuperJe/coco/app/data_proxy/model"
 	"github.com/SuperJe/coco/pkg/mongo"
 	"github.com/SuperJe/coco/pkg/mongo/entity"
 	"github.com/SuperJe/coco/pkg/util"
-	"github.com/pkg/errors"
-	"io/ioutil"
-	"net/http"
-	"time"
 )
 
 var mgo *mongo.Client
+var prod int64
+
+func init() {
+	flag.Int64Var(&prod, "prod", 0, "1-使用生产环境ip")
+}
 
 func batch(names []string) error {
 	bs, _ := json.Marshal(names)
@@ -62,8 +70,11 @@ func update(user *entity.User, campProgression *model.CampaignProgression) error
 		CampProgression: campProgression,
 	}
 	body, _ := json.Marshal(data)
-	// req, err := http.NewRequest("POST", "81.71.3.223:9090", bytes.NewBuffer(body))
-	req, err := http.NewRequest("POST", "http://127.0.0.1:7777/user_progression", bytes.NewBuffer(body))
+	url := "http://127.0.0.1:7777/user_progression"
+	if prod == 1 {
+		url = "http://81.71.3.223:7777/user_progression"
+	}
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(body))
 	if err != nil {
 		return errors.Wrap(err, "http.NewRequest err")
 	}
@@ -153,6 +164,7 @@ func buildProgression(campaign string, completed map[string][]string, counts map
 }
 
 func main() {
+	flag.Parse()
 	var err error
 	mgo, err = mongo.NewCocoClient2()
 	if err != nil {
