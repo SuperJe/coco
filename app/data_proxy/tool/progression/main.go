@@ -15,7 +15,6 @@ import (
 	"github.com/SuperJe/coco/app/data_proxy/model"
 	"github.com/SuperJe/coco/pkg/mongo"
 	"github.com/SuperJe/coco/pkg/mongo/entity"
-	"github.com/SuperJe/coco/pkg/util"
 )
 
 var mgo *mongo.Client
@@ -187,9 +186,6 @@ func main() {
 			if err != nil {
 				fmt.Printf("user %s getCampProgression err:%s\n", user.Name, err.Error())
 				continue
-			}
-			if user.Name == "teacher010" {
-				fmt.Println("progression:", util.JSONString(campProgression))
 			}
 			if err := update(user, campProgression); err != nil {
 				fmt.Println("doRequest err:", err.Error())
