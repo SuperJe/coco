@@ -24,42 +24,6 @@ func init() {
 	flag.Int64Var(&prod, "prod", 0, "1-使用生产环境ip")
 }
 
-func batch(names []string) error {
-	bs, _ := json.Marshal(names)
-	req, err := http.NewRequest("GET", "http://127.0.0.1:7777/batch_user_progression", nil)
-	if err != nil {
-		return fmt.Errorf("http.NewRequest err:%s", err.Error())
-	}
-	params := req.URL.Query()
-	params.Add("names", string(bs))
-	req.URL.RawQuery = params.Encode()
-	rsp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		return fmt.Errorf("http.DefaultClient.Do err:%s", err.Error())
-	}
-	defer func() {
-		if err := rsp.Body.Close(); err != nil {
-			_ = rsp.Body.Close()
-		}
-	}()
-	bs, err = ioutil.ReadAll(rsp.Body)
-	if err != nil {
-		return fmt.Errorf("ReadAll err:%s", err.Error())
-	}
-	if rsp.StatusCode != http.StatusOK {
-		return fmt.Errorf("http err code:%d", rsp.StatusCode)
-	}
-	data := &model.BatchGetUserProgressionRsp{}
-	if err := json.Unmarshal(bs, data); err != nil {
-		return errors.Wrap(err, "unmarshal err")
-	}
-	if data.Code != 0 {
-		return fmt.Errorf("batch get err:%s", data.Msg)
-	}
-	fmt.Println("data:", data.CampProgressions)
-	return nil
-}
-
 func update(user *entity.User, campProgression *model.CampaignProgression) error {
 	data := &model.UpdateUserProgressionReq{
 		Name:            user.Name,
@@ -169,9 +133,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	if err := batch([]string{"codeMagic", "teacher_1", "test0001", "xxx", "jelly003"}); err != nil {
-		fmt.Println("batch err:", err.Error())
-	}
 	for {
 		time.Sleep(3 * time.Second)
 		users, err := mgo.GetUsers(context.Background())
@@ -191,10 +152,6 @@ func main() {
 				fmt.Println("doRequest err:", err.Error())
 				continue
 			}
-			// if err := get(user.Name); err != nil {
-			// 	fmt.Println("get err:", err.Error())
-			// 	continue
-			// }
 		}
 	}
 }

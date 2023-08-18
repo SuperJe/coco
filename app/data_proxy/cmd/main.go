@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/SuperJe/coco/app/data_proxy/service"
 	"github.com/gin-gonic/gin"
+
+	"github.com/SuperJe/coco/app/data_proxy/service"
 )
 
 func main() {

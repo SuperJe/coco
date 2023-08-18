@@ -39,9 +39,14 @@ type BatchGetUserProgressionRsp struct {
 	CampProgressions map[string]*CampaignProgression `json:"camp_progressions"`
 }
 
+// RegisterReq register request body
 type RegisterReq struct {
-	Name string `json:"name"`
-	Pwd  string `json:"pwd"`
+	Name        string `json:"name"`
+	Pwd         string `json:"pwd"`
+	Phone       string `json:"phone"`
+	Sex         string `json:"sex"`
+	Class       string `json:"class"`
+	TeacherName string `json:"teacher_name"`
 }
 
 type RegisterRsp struct {

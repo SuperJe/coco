@@ -2,7 +2,6 @@ package entity
 
 import (
 	"fmt"
-	"regexp"
 	"strings"
 	"time"
 
@@ -40,9 +39,6 @@ type User struct {
 func userNameSlugify(name string) string {
 	// 将所有字母字符转换为小写
 	name = strings.ToLower(name)
-	// 使用正则表达式匹配非字母字符并替换为空格
-	reg := regexp.MustCompile("[^a-z]+")
-	name = reg.ReplaceAllString(name, " ")
 	// 使用空格分隔单词，并将单词连接成 slug 形式
 	words := strings.Fields(name)
 	return strings.Join(words, "-")

@@ -14,8 +14,6 @@ type Config struct {
 	DB       string
 }
 
-var Client *xorm.Engine
-
 // DSEngine data_sync数据库的engine
 func DSEngine() (*xorm.Engine, error) {
 	c := &Config{

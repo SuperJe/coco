@@ -1,0 +1,2 @@
+name;password;phone;sex;class;teacher
+student 5;student 5;13012345678;0;J-202303;Will Yue

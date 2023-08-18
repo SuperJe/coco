@@ -23,15 +23,9 @@ func (s *Service) GetUserProgression(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusOK, rsp)
 		return
 	}
-	if up == nil {
-		rsp.Msg = "user not exist"
-		rsp.Code = common.ErrCodeDBNotExist
-		c.AbortWithStatusJSON(http.StatusOK, rsp)
-		return
-	}
 	rsp.Msg = "success"
-	rsp.Gems = up.Gems
-	rsp.Completed = up.Completed
-	rsp.CampaignProgression = up.Detail
+	rsp.Gems = up.GetGems()
+	rsp.Completed = up.GetCompletedNum()
+	rsp.CampaignProgression = up.GetDetail()
 	c.AbortWithStatusJSON(http.StatusOK, rsp)
 }

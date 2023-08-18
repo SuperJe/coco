@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+
 	"github.com/SuperJe/coco/app/data_proxy/model"
 )
 
@@ -12,6 +13,32 @@ type UserProgression struct {
 	Completed int32                      `xorm:"completed"`
 	Gems      int32                      `xorm:"gems"`
 	Detail    *model.CampaignProgression `xorm:"detail"`
+}
+
+func (up *UserProgression) TableName() string {
+	return "user_progression"
+}
+
+func (up *UserProgression) GetGems() int32 {
+	if up == nil {
+		return 0
+	}
+	return up.Gems
+}
+
+func (up *UserProgression) GetCompletedNum() int32 {
+	if up == nil {
+		return 0
+	}
+	return up.Completed
+}
+
+func (up *UserProgression) GetDetail() *model.CampaignProgression {
+	if up == nil {
+		pg := &model.Progression{}
+		return &model.CampaignProgression{Dungeon: pg, Forest: pg, Desert: pg, Mountain: pg, Glacier: pg}
+	}
+	return up.Detail
 }
 
 func NewUserProgression(req *model.UpdateUserProgressionReq) *UserProgression {
@@ -33,10 +60,6 @@ func (ups UserProgressions) GroupByName() map[string]*model.CampaignProgression 
 		result[up.Name] = up.Detail
 	}
 	return result
-}
-
-func (up UserProgression) TableName() string {
-	return "user_progression"
 }
 
 // UpsertUserProgression 存在则更新 不存在则插入
@@ -76,7 +99,8 @@ func (s *Store) GetUserProgression(name string) (*UserProgression, error) {
 
 func (s *Store) BatchGetUserProgressions(names []string) (UserProgressions, error) {
 	progressions := make([]*UserProgression, 0)
-	if err := s.mysql.Table(UserProgression{}.TableName()).In("name", names).Find(&progressions); err != nil {
+	up := &UserProgression{}
+	if err := s.mysql.Table(up.TableName()).In("name", names).Find(&progressions); err != nil {
 		return nil, err
 	}
 	return progressions, nil
