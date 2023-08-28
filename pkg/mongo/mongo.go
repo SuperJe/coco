@@ -70,7 +70,6 @@ func (c *Client) FindOne(ctx context.Context, collection string,
 	filter bson.M, v interface{}, opts ...*options.FindOneOptions) error {
 	r := c.Collection(collection).FindOne(ctx, filter, opts...)
 	if r.Err() != nil {
-		fmt.Printf("find err: %s, db:%s\n", r.Err().Error(), c.db)
 		return r.Err()
 	}
 	return r.Decode(v)

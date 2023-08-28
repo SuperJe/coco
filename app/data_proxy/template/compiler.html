@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ext-language_tools.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="editor-container">
+        <div id="editor" style="width: 100%; height: 100%;"></div>
+        <button class="run-button" onclick="runCode()">Run Code</button>
+        <div class="language-select">
+            <label for="language">语言:</label>
+            <select id="language" onchange="changeLanguage()">
+                <option value="c_cpp">C++</option>
+                <option value="python">Python</option>
+            </select>
+        </div>
+    </div>
+    <div class="output-container">
+        <div class="input-box">
+            <textarea id="input" placeholder="请输入程序参数..." style="width: 100%; height: 100%;"></textarea>
+        </div>
+        <div class="output-box">
+            <pre id="output" style="border: none; width: 100%; height: 100%; white-space: pre-wrap; word-wrap: break-word;"></pre>
+        </div>
+    </div>
+</div>
+
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.setFontSize(14);
+    editor.setShowPrintMargin(false);
+    editor.setOption("enableBasicAutocompletion", true);
+    editor.setOption("enableLiveAutocompletion", true);
+    editor.setBehavioursEnabled(true);
+
+    var languageSelector = document.getElementById("language");
+    var codeStore = {
+        c_cpp: `#include <iostream>\n\nint main() {\n    std::cout << "Hello, DirectorYan!" << std::endl;\n    return 0;\n}`,
+        python: `print("Hello, Python!")`
+    };
+
+    function changeLanguage() {
+        var selectedLanguage = languageSelector.value;
+        if (selectedLanguage === "c_cpp") {
+            codeStore.python = editor.getValue();  // Save current Python code
+            if (codeStore.python.length === 0) {
+                codeStore.python = `print("Hello, DirectorYan!")`
+            }
+            editor.session.setMode("ace/mode/c_cpp");
+            editor.setValue(codeStore.c_cpp);
+        } else if (selectedLanguage === "python") {
+            codeStore.c_cpp = editor.getValue();  // Save current C++ code
+            editor.session.setMode("ace/mode/python");
+            editor.setValue(codeStore.python);
+        }
+    }
+
+    // Set default language to C++
+    changeLanguage();
+
+    function runCode() {
+        // 禁用按钮并更新文本
+        var runButton = document.querySelector(".run-button");
+        runButton.disabled = true;
+        runButton.textContent = "Compiling...";
+
+        var codeToRun = editor.getValue();
+        var input = document.getElementById("input").value;  // Get user input
+        var output = document.getElementById("output");
+        output.style.backgroundColor = "black";
+        output.style.color = "white";
+
+        // 假设您的服务器端点是：https://your-server.com/compile
+        var serverEndpoint = "http://localhost:7777/compiler/run";
+        var requestData = {
+            code: codeToRun,
+            input: document.getElementById("input").value,
+            lang: languageSelector.value
+        };
+
+        // 发送POST请求到服务器
+        fetch(serverEndpoint, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                handleServerResponse(data);
+                // 恢复按钮状态和文本
+                runButton.disabled = false;
+                runButton.textContent = "Run Code";
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                // 恢复按钮状态和文本
+                runButton.disabled = false;
+                runButton.textContent = "Run Code";
+            });
+        output.style.fontSize = "16px";
+
+        // Simulate running the code
+        // var simulatedOutput = simulateRun(codeToRun, input);
+
+        // output.textContent = simulatedOutput;
+    }
+
+    function handleServerResponse(data) {
+        var output = document.getElementById("output");
+        output.style.backgroundColor = "black";
+        output.style.color = "white";
+        output.style.fontSize = "16px";
+
+        // var resultMessage = "编译结果: " + data.msg + "\n\n";
+        // var resultContent = "输出:\n" + data.output;
+        // output.textContent = resultMessage + resultContent;
+
+        var resultMessage = "运行结果: ";
+        if (data.code === 0) {
+            resultMessage += '<span style="color: green;">' + data.msg + '</span>';
+        } else {
+            resultMessage += '<span style="color: red;">' + data.msg + '</span>';
+        }
+        resultMessage += "\n\n输出:\n" + data.output;
+
+        output.innerHTML = resultMessage;
+    }
+
+
+    // Simulate running the code with input
+    function simulateRun(code, input) {
+        // This is a simplified example
+        // You can replace this with actual code execution on the server
+        var simulatedOutput = "Simulated output:\n";
+        simulatedOutput += "Input:\n" + input + "\n\n";
+        simulatedOutput += "Output:\n";
+        // Simulate C++ or Python output
+        if (editor.session.getMode().$id === "ace/mode/c_cpp") {
+            simulatedOutput += "Hello, World!\n";  // Replace with actual C++ output
+        } else if (editor.session.getMode().$id === "ace/mode/python") {
+            simulatedOutput += "Hello, Python!\n";  // Replace with actual Python output
+        }
+        return simulatedOutput;
+    }
+</script>
+
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        display: flex;
+        height: 100%;
+        position: relative;
+    }
+
+    .editor-container, .output-container {
+        flex: 1;
+        height: 100%;
+        padding: 0;
+        box-sizing: border-box;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .language-select {
+        position: absolute;
+        top: -10px;
+        right: 0;
+        margin-top: 10px;
+    }
+
+    .language-select label {
+        color: white;
+        font-size: 14px;
+        margin-right: 5px;
+    }
+
+    .language-select select {
+        background-color: black;
+        color: white;
+        border: 1px solid white;
+        padding: 5px;
+        font-size: 14px;
+    }
+
+    .output-container {
+        display: flex;
+        flex-direction: column;
+        background-color: black;
+        border-left: 1px solid #ccc;
+    }
+
+    .output-box, .input-box {
+        flex: 1;
+        padding: 10px;
+        background-color: black;
+    }
+
+    #output {
+        border: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .run-button {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background-color: black;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .run-button:hover {
+        background-color: #333;
+    }
+
+    #input {
+        resize: none;
+        padding: 5px;
+        font-size: 14px;
+        height: 100%;
+        width: 100%;
+        background-color: black;
+        color: white;
+        border: none;
+    }
+</style>
+</body>
+</html>

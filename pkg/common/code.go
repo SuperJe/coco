@@ -4,6 +4,9 @@ const (
 	// ErrCodeDB DB操作错误
 	ErrCodeDB         = 10001
 	ErrCodeDBNotExist = 10002
+
+	// ErrCompile 编译失败
+	ErrCompile = 20001
 )
 
 const (

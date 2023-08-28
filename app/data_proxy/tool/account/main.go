@@ -13,7 +13,9 @@ import (
 	"strings"
 
 	"github.com/pkg/errors"
+	mongo2 "go.mongodb.org/mongo-driver/mongo"
 
+	"github.com/SuperJe/coco/app/data_proxy/model"
 	"github.com/SuperJe/coco/app/data_proxy/store"
 	"github.com/SuperJe/coco/pkg/mongo"
 )
@@ -44,14 +46,27 @@ func hashPassword(password string) string {
 
 // 每次创建都新建mongo和mysql实例, 数据量小, 不用在意此开销。
 func registerUser(st *store.Student) error {
+	if err := syncToMongo(st); err != nil {
+		return err
+	}
+	return syncToAdmin(st)
+}
+
+func syncToMongo(st *store.Student) error {
 	cli, err := mongo.NewCocoClient2()
 	if err != nil {
 		return err
 	}
-	if err := cli.RegisterUser(context.Background(), st.Name, st.Password); err != nil {
+	user, err := cli.GetUserByName(context.Background(), st.Name)
+	if err != nil && !errors.Is(err, mongo2.ErrNoDocuments) {
 		return err
 	}
-	return syncToAdmin(st)
+	if user != nil {
+		fmt.Println("====warning=====")
+		fmt.Printf("%s has exist in cc\n\n", st.Name)
+		return nil
+	}
+	return cli.RegisterUser(context.Background(), st.Name, st.Password)
 }
 
 func syncToAdmin(st *store.Student) error {
@@ -75,11 +90,19 @@ func syncToAdmin(st *store.Student) error {
 			_ = rsp.Body.Close()
 		}
 	}()
-	if _, err = ioutil.ReadAll(rsp.Body); err != nil {
-		return errors.Wrap(err, "ReadAll err")
-	}
 	if rsp.StatusCode != http.StatusOK {
 		return fmt.Errorf("http err code:%d", rsp.StatusCode)
+	}
+	bs, err := ioutil.ReadAll(rsp.Body)
+	if err != nil {
+		return errors.Wrap(err, "ReadAll err")
+	}
+	dataRsp := &model.RegisterRsp{}
+	if err := json.Unmarshal(bs, dataRsp); err != nil {
+		return errors.Wrap(err, "json unmarshal err")
+	}
+	if dataRsp.Code != 0 {
+		return fmt.Errorf("register err:%s", dataRsp.Msg)
 	}
 
 	fmt.Printf("register %s success\n", st.Name)

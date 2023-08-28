@@ -1,2 +1,6 @@
 name;password;phone;sex;class;teacher
-student 5;student 5;13012345678;0;J-202303;Will Yue
+Director Student2;Director Student2;13012345678;1;SM_202305;Director Yan
+Director Student3;Director Student3;13012345678;1;SM_202305;Director Yan
+Director Student4;Director Student4;13012345678;1;SM_202305;Director Yan
+Director Student5;Director Student5;13012345678;1;SM_202305;Director Yan
+Director Student6;Director Student6;13012345678;1;SM_202305;Director Yan
