@@ -3114,7 +3114,7 @@ button:disabled,
 	letter-spacing: 0.1em;
 	line-height: 3em;
 	position: absolute;
-	right: 0.7em;
+	left: 0.7em;
 	text-transform: uppercase;
 	top: 0.7em;
 }
@@ -3127,7 +3127,7 @@ button:disabled,
 
 #header nav a:before {
 	float: right;
-	margin-left: 0.75em;
+	margin-right: 0.75em;
 }
 
 #header nav a[href="#menu"] {

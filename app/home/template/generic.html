@@ -6,9 +6,10 @@
 -->
 <html>
 	<head>
-		<title>Generic - Solid State by HTML5 UP</title>
+		<title>兔小灵:立即报名</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="icon" href="static/images/web-icon.ico" type="image/x-icon">
 		<link rel="stylesheet" href="static/assets/css/main.css" />
 		<noscript><link rel="stylesheet" href="static/assets/css/noscript.css" /></noscript>
 	</head>
@@ -19,9 +20,9 @@
 
 				<!-- Header -->
 					<header id="header">
-						<h1><a href="/">Solid State</a></h1>
 						<nav>
-							<a href="#menu">Menu</a>
+							<a href="/">首页</a>
+							<a href="/generic" style="border: 1px solid; border-radius: 10px">立即报名</a>
 						</nav>
 					</header>
 
@@ -44,12 +45,13 @@
 					<section id="wrapper">
 						<header>
 							<div class="inner">
-								<h2>Generic</h2>
-								<p>Phasellus non pulvinar erat. Fusce tincidunt nisl eget ipsum.</p>
+								<h2>立即报名</h2>
+								<p style="font-style: oblique">请填写您的报名信息, 即可完成报名。</p>
 							</div>
 						</header>
 
 						<!-- Content -->
+						<!--
 							<div class="wrapper">
 								<div class="inner">
 
@@ -78,50 +80,66 @@
 
 								</div>
 							</div>
-
+						-->
 					</section>
 
 				<!-- Footer -->
-					<section id="footer">
-						<div class="inner">
-							<h2 class="major">Get in touch</h2>
-							<p>Cras mattis ante fermentum, malesuada neque vitae, eleifend erat. Phasellus non pulvinar erat. Fusce tincidunt, nisl eget mattis egestas, purus ipsum consequat orci, sit amet lobortis lorem lacus in tellus. Sed ac elementum arcu. Quisque placerat auctor laoreet.</p>
-							<form method="post" action="#">
-								<div class="fields">
-									<div class="field">
-										<label for="name">Name</label>
-										<input type="text" name="name" id="name" />
-									</div>
-									<div class="field">
-										<label for="email">Email</label>
-										<input type="email" name="email" id="email" />
-									</div>
-									<div class="field">
-										<label for="message">Message</label>
-										<textarea name="message" id="message" rows="4"></textarea>
-									</div>
+				<section id="footer">
+					<div class="inner">
+						<h2 class="major">报名信息</h2>
+						<p style="font-style: oblique">请确保您的报名信息准确无误, 我们将尽快联系您。</p>
+						<form method="post" action="#">
+							<div class="fields">
+								<div class="field">
+									<label for="name">您的姓名</label>
+									<input type="text" name="name" id="name" maxlength="6" required/>
 								</div>
-								<ul class="actions">
-									<li><input type="submit" value="Send Message" /></li>
-								</ul>
-							</form>
-							<ul class="contact">
-								<li class="icon solid fa-home">
-									Untitled Inc<br />
-									1234 Somewhere Road Suite #2894<br />
-									Nashville, TN 00000-0000
-								</li>
-								<li class="icon solid fa-phone">(000) 000-0000</li>
-								<li class="icon solid fa-envelope"><a href="#">information@untitled.tld</a></li>
-								<li class="icon brands fa-twitter"><a href="#">twitter.com/untitled-tld</a></li>
-								<li class="icon brands fa-facebook-f"><a href="#">facebook.com/untitled-tld</a></li>
-								<li class="icon brands fa-instagram"><a href="#">instagram.com/untitled-tld</a></li>
+								<div class="field">
+									<label for="phone">您的手机号码</label>
+									<input type="text"
+										   name="phone"
+										   id="phone"
+										   minlength="11"
+										   maxlength="11"
+										   oninvalid="setCustomValidity('请输入正确的手机号码')"
+										   onkeyup="value=value.replace(/[^\d]/g,'')"
+										   required
+									/>
+								</div>
+								<div class="field">
+									<label for="course">课程</label>
+									<select name="course" id="course">
+										<option value="python">Python</option>
+										<option value="cpp">C++</option>
+										<option value="scratch">图形化编程</option>
+									</select>
+								</div>
+								<div class="field">
+									<label for="location">校区</label>
+									<select name="location" id="location">
+										<option value="bainaohui">百脑汇校区</option>
+										<option value="gudishi">古地石校区</option>
+									</select>
+								</div>
+							</div>
+							<ul class="actions">
+								<li><input type="submit" value="立即报名" /></li>
 							</ul>
-							<ul class="copyright">
-								<li>&copy; Untitled Inc. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
-							</ul>
-						</div>
-					</section>
+						</form>
+						<ul class="contact">
+							<li class="icon solid fa-home">
+								百脑汇校区地址:厦门市湖滨南路百脑汇科技大厦。
+								古地石校区地址: 颜董事家里。
+							</li>
+							<li class="icon solid fa-phone">+86 13055366228</li>
+							<li class="icon solid fa-envelope"><a href="#">137272190@qq.com</a></li>
+							<li class="icon brands fa-twitter"><a href="#">twitter.com/realDonaldTrump</a></li>
+						</ul>
+						<ul class="copyright">
+							<li>&copy; 水木莘华&兔小灵版权所有</li><li><a href="#">兔小灵工作室</a></li>
+						</ul>
+					</div>
+				</section>
 
 			</div>
 
