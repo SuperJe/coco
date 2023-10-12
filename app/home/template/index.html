@@ -233,7 +233,7 @@
                     <br>
                     古地石校区地址: 古地石地铁口。
                 </li>
-                <li class="icon solid fa-envelope"><a href="#">coolwiller.77@gmail.com</a></li>
+	        <li class="icon solid fa-envelope">coolwiller.77@gmail.com</li>
                 <li class="icon solid fa-phone">+86 13055366228</li>
                 <li class="icon solid fa-arrow-alt-circle-down">扫下方二维码联系我们</li>
                 <li><img src="static/images/director.png" alt="" width="30%" height="45%"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="static/images/smxh_gzh.jpg" alt="" width="30%" height="45%"/></li>
@@ -278,7 +278,7 @@
         // 发送 POST 请求到指定的 URL
         $.ajax({
             type: "POST",
-            url: "http://localhost:7471/reserve",
+            url: "http://81.71.3.223:7471/reserve",
             data: formData,
             success: function(response) {
                 if (response && response.code === 0) {
