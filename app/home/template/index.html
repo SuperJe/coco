@@ -50,7 +50,7 @@
             <!--
             <div class="logo"><span class="icon fa-gem"></span></div>
             -->
-            <img src="static/images/smxh_purple.jpg" alt="" style="width: 10%;height: 10%;"/>
+            <img src="static/images/smxh_yellow.jpg" alt="" style="width: 10%;height: 10%;"/>
             <h2>兔小灵工作室</h2>
             <p>水木莘华旗下专注于青少年编程的工作室，提供专业又有趣的编程体验。<a href="#"></a></p>
         </div>
@@ -224,7 +224,7 @@
                 <iframe name="hiddenFrame" style="display: none;"></iframe>
                 -->
                 <ul class="actions">
-                    <li><input type="submit" value="点击预约" /></li>
+                    <li><input type="submit" value="点击预约" /> <button type="button" id="copy-ticket-button">复制预约码</button><div id="ticket"></div> </li>
                 </ul>
             </form>
             <ul class="contact">
@@ -254,6 +254,9 @@
 <script src="static/assets/js/util.js"></script>
 <script src="static/assets/js/main.js"></script>
 <script>
+    // 隐藏复制验证码按钮
+    $('#copy-ticket-button').css('display', 'none');
+
     function validatePhone(input) {
         // 移除错误提示信息
         input.setCustomValidity("");
@@ -279,6 +282,7 @@
         $.ajax({
             type: "POST",
             url: "http://81.71.3.223:7471/reserve",
+            // url: "http://localhost:7471/reserve",
             data: formData,
             success: function(response) {
                 if (response && response.code === 0) {
@@ -287,6 +291,29 @@
                     submitButton.prop("disabled", true);
                     // 修改按钮文本
                     submitButton.val("您已预约，预约码：" + response.ticket);
+
+                    // 获取复制按钮和预约码元素
+                    var copyTicketButton = document.getElementById('copy-ticket-button');
+                    var ticketElement = document.getElementById('ticket');
+
+                    // 显示复制按钮
+                    $('#copy-ticket-button').css('display', 'inline-block');
+                    var ticketCode = response.ticket;
+
+                    // 将预约码显示在页面上
+                    ticketElement.innerText = '预约码: ' + ticketCode;
+
+                    // 复制按钮的点击事件处理函数
+                    copyTicketButton.addEventListener('click', function() {
+                        // 使用Clipboard API 写入剪贴板
+                        navigator.clipboard.writeText(ticketCode).then(function() {
+                            // 复制成功时的处理
+                            alert('预约码已复制到剪贴板！');
+                        }).catch(function(err) {
+                            // 复制失败时的处理
+                            console.error('复制失败: ', err);
+                        });
+                    });
                 } else if (response && response.code === 1062) {
 
                 } else {
