@@ -309,7 +309,8 @@
                         // 执行复制命令并移除文本框
                         document.execCommand('copy') ? res() : rej();
                         textArea.remove()
-                        alert("预约成功, 预约码已经复制到剪切板中, 预约码为:" + response.ticket + ", 请保管好预约码，方便我们与你联系上课。");
+                        alert("预约成功, 预约码为:" + response.ticket + ", 请保管好预约码，方便我们与你联系上课。");
+                        alert("预约码已复制成功!")
                         submitButton.focus()
                         // 禁用提交按钮
                         submitButton.prop("disabled", true);
