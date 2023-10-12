@@ -286,39 +286,33 @@
             data: formData,
             success: function(response) {
                 if (response && response.code === 0) {
-                    alert("预约成功, 请复制您的预约码，我们会联系您来体验课程，预约码:" + response.ticket);
-                    // 禁用提交按钮
-                    submitButton.prop("disabled", true);
                     // 修改按钮文本
-                    submitButton.val("您已预约，预约码：" + response.ticket);
+                    submitButton.val("您已预约，预约码：" + response.ticket + ", 已复制到您的剪贴板中");
 
                     // 获取复制按钮和预约码元素
-                    var copyTicketButton = document.getElementById('copy-ticket-button');
+                    // var copyTicketButton = document.getElementById('copy-ticket-button');
 
                     // 显示复制按钮
-                    $('#copy-ticket-button').css('display', 'inline-block');
+                    // $('#copy-ticket-button').css('display', 'inline-block');
                     var ticketCode = response.ticket;
-
-                    // 复制按钮的点击事件处理函数
-                    copyTicketButton.addEventListener('click', function() {
-                        // navigator clipboard 需要https等安全上下文
-                        event.preventDefault(); // 阻止按钮的默认行为
-                        let textArea = document.createElement("textarea");
-                        textArea.value = ticketCode;
-                        // 使text area不在viewport，同时设置不可见
-                        textArea.style.position = "absolute";
-                        textArea.style.opacity = 0;
-                        textArea.style.left = "-999999px";
-                        textArea.style.top = "-999999px";document.body.appendChild(textArea);
-                        textArea.focus();
-                        textArea.select();
-                        return new Promise((res, rej) => {
-                            // 执行复制命令并移除文本框
-                            document.execCommand('copy') ? res() : rej();
-                            textArea.remove()
-                            alert("预约码复制成功!")
-                            copyTicketButton.focus()
-                        });
+                    // navigator clipboard 需要https等安全上下文, 所以用copy
+                    let textArea = document.createElement("textarea");
+                    textArea.value = ticketCode;
+                    // 使text area不在viewport，同时设置不可见
+                    textArea.style.position = "absolute";
+                    textArea.style.opacity = 0;
+                    textArea.style.left = "-999999px";
+                    textArea.style.top = "-999999px";document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    return new Promise((res, rej) => {
+                        // 执行复制命令并移除文本框
+                        document.execCommand('copy') ? res() : rej();
+                        textArea.remove()
+                        alert("预约成功, 预约码已经复制到剪切板中, 预约码为:" + response.ticket + ", 请保管好预约码，方便我们与你联系上课。");
+                        submitButton.focus()
+                        // 禁用提交按钮
+                        submitButton.prop("disabled", true);
                     });
                 } else {
                     alert("预约失败, 请您重试, 错误编码:" + response.code)
