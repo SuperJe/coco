@@ -22,10 +22,10 @@
     <header id="header" class="alt">
         <nav>
             <a href="/" style="border: 1px solid; border-radius: 10px">首页</a>
-            <a href="/generic">立即报名</a>
-                <!--
-                <li><a href="/elements">Elements</a></li>
-                -->
+            <!--
+        <a href="/generic">立即报名</a>
+            <li><a href="/elements">Elements</a></li>
+            -->
         </nav>
     </header>
 
@@ -35,8 +35,8 @@
             <h2>菜单</h2>
             <ul class="links">
                 <li><a href="/">首页</a></li>
-                <li><a href="/generic">Generic</a></li>
                 <!--
+                <li><a href="/generic">Generic</a></li>
                 <li><a href="/elements">Elements</a></li>
                 -->
             </ul>
@@ -47,7 +47,10 @@
     <!-- Banner -->
     <section id="banner">
         <div class="inner">
+            <!--
             <div class="logo"><span class="icon fa-gem"></span></div>
+            -->
+            <img src="static/images/smxh_circle.png" alt="" style="width: 10%;height: 10%;"/>
             <h2>兔小灵工作室</h2>
             <p>水木莘华旗下专注于青少年编程的工作室，提供专业又有趣的编程体验。<a href="#"></a></p>
         </div>
@@ -57,6 +60,7 @@
     <section id="wrapper">
 
         <!-- One -->
+        <!--
         <section id="one" class="wrapper spotlight style1">
             <div class="inner">
                 <a href="#" class="image"><img src="static/images/pic01.jpg" alt="" /></a>
@@ -66,8 +70,10 @@
                 </div>
             </div>
         </section>
+        -->
 
         <!-- Two -->
+        <!--
         <section id="two" class="wrapper alt spotlight style2">
             <div class="inner">
                 <a href="#" class="image"><img src="static/images/tiger.png" alt="" /></a>
@@ -77,8 +83,10 @@
                 </div>
             </div>
         </section>
+        -->
 
         <!-- Three -->
+        <!--
         <section id="three" class="wrapper spotlight style3">
             <div class="inner">
                 <a href="#" class="image"><img src="static/images/daben.jpeg" alt="" /></a>
@@ -88,6 +96,7 @@
                 </div>
             </div>
         </section>
+        -->
 
         <!-- Four -->
         <section id="four" class="wrapper alt style1">
@@ -96,22 +105,22 @@
                 <p>覆盖6～17岁青少年编程学习全阶段。</p>
                 <section class="features">
                     <article>
-                        <a href="#" class="image"><img src="static/images/pic05.jpg" alt="" /></a>
+                        <a href="#" class="image"><img src="static/images/course_t1.jpg" alt="" /></a>
                         <h3 class="major">T1: 图形化编程启蒙</h3>
                         <p class="level-desc">从scratch开启编程世界的大门, 掌握图形化编程语法和程序的基本结构，激发好奇心和创造力，培养孩子主动探索的能力。</p>
                     </article>
                     <article>
-                        <a href="#" class="image"><img src="static/images/pic06.jpg" alt="" /></a>
+                        <a href="#" class="image"><img src="static/images/course_t2.jpg" alt="" /></a>
                         <h3 class="major">T2: 图形化创作</h3>
                         <p class="level-desc">培养孩子更多的创造能力，通过制作复杂的作品来养成孩子的编程思维、计算思维，提升孩子思维的灵敏度。</p>
                     </article>
                     <article>
-                        <a href="#" class="image"><img src="static/images/pic07.jpg" alt="" /></a>
+                        <a href="#" class="image"><img src="static/images/course_t3.jpg" alt="" /></a>
                         <h3 class="major">T3:Python基础</h3>
                         <p class="level-desc">Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
                     </article>
                     <article>
-                        <a href="#" class="image"><img src="static/images/pic04.jpg" alt="" /></a>
+                        <a href="#" class="image"><img src="static/images/course_t4.jpg" alt="" /></a>
                         <h3 class="major">T4:Python提高</h3>
                         <p class="level-desc">Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
                     </article>
@@ -127,17 +136,17 @@
                     </article>
                     <article>
                         <a href="#" class="image"><img src="static/images/pic04.jpg" alt="" /></a>
-                        <h3 class="major">T6-b:C++算法入门</h3>
+                        <h3 class="major">T6-b:算法入门</h3>
                         <p class="level-desc">Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
                     </article>
                     <article>
                         <a href="#" class="image"><img src="static/images/pic04.jpg" alt="" /></a>
-                        <h3 class="major">T7-a:C++应用实践</h3>
+                        <h3 class="major">T7-a:应用实践</h3>
                         <p class="level-desc">Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
                     </article>
                     <article>
                         <a href="#" class="image"><img src="static/images/pic04.jpg" alt="" /></a>
-                        <h3 class="major">T7-b:C++算法进阶</h3>
+                        <h3 class="major">T7-b:算法进阶</h3>
                         <p class="level-desc">Lorem ipsum dolor sit amet, consectetur adipiscing vehicula id nulla dignissim dapibus ultrices.</p>
                     </article>
                 </section>
@@ -151,7 +160,7 @@
         <div class="inner">
             <h2 class="major">课程预约</h2>
             <p style="font-style: oblique">请留下您的信息来预约课程, 我们将尽快联系您。</p>
-            <form method="post" action="#">
+            <form id="reserve">
                 <div class="fields">
                     <div class="field">
                         <label for="name">您的姓名</label>
@@ -162,12 +171,20 @@
                         <input type="text"
                                name="phone"
                                id="phone"
-                               minlength="11"
                                maxlength="11"
-                               oninvalid="setCustomValidity('请输入正确的手机号码')"
-                               onkeyup="value=value.replace(/[^\d]/g,'')"
+                               minlength="11"
+                               ooninput="validatePhone(this)"
                                required
                         />
+                    </div>
+                    <div class="field">
+                        <label for="grade">当前年级</label>
+                        <select name="grade" id="grade">
+                            <option value="secondary_low">小学1-3年级</option>
+                            <option value="secondary_high">小学4-6年级</option>
+                            <option value="junior">初中</option>
+                            <option value="high">高中</option>
+                        </select>
                     </div>
                     <div class="field">
                         <label for="course">课程</label>
@@ -203,18 +220,22 @@
                         <textarea name="message" id="message" rows="4"></textarea>
                     </div>
                 </div>
+                <!--
+                <iframe name="hiddenFrame" style="display: none;"></iframe>
+                -->
                 <ul class="actions">
                     <li><input type="submit" value="点击预约" /></li>
                 </ul>
             </form>
             <ul class="contact">
                 <li class="icon solid fa-home">
-                    百脑汇校区地址:厦门市湖滨南路百脑汇科技大厦。
-                    古地石校区地址: 颜董事家里。
+                    百脑汇校区地址:厦门市百脑汇科技大厦1508。
+                    古地石校区地址: 古地石地铁口。
                 </li>
-                <li class="icon solid fa-phone">+86 13055366228</li>
                 <li class="icon solid fa-envelope"><a href="#">137272190@qq.com</a></li>
-                <li class="icon brands fa-twitter"><a href="#">twitter.com/realDonaldTrump</a></li>
+                <li class="icon solid fa-phone">+86 13055366228</li>
+                <li class="icon solid fa-arrow-alt-circle-down">扫下方二维码联系我们</li>
+                <li><img src="static/images/superj.jpg" alt="" width="30%" height="45%"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="static/images/superj.jpg" alt="" width="30%" height="45%"/></li>
             </ul>
             <ul class="copyright">
                 <li>&copy; 水木莘华&兔小灵版权所有</li><li><a href="#">兔小灵工作室</a></li>
@@ -231,6 +252,53 @@
 <script src="static/assets/js/breakpoints.min.js"></script>
 <script src="static/assets/js/util.js"></script>
 <script src="static/assets/js/main.js"></script>
+<script>
+    function validatePhone(input) {
+        // 移除错误提示信息
+        input.setCustomValidity("");
+        // 替换非数字字符
+        input.value = input.value.replace(/[^\d]/g, '');
+        // 检查手机号码格式
+        if (input.value.length !== 11) {
+            input.setCustomValidity("请输入正确的手机号码");
+        }
+    }
+
+    // 当表单提交时触发
+    $("#reserve").submit(function(event) {
+        // 阻止表单的默认提交行为
+        event.preventDefault();
+
+        // 获取表单数据
+        var formData = $(this).serialize();
+        // 获取提交按钮元素
+        var submitButton = $(this).find("input[type='submit']");
+
+        // 发送 POST 请求到指定的 URL
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:7471/reserve",
+            data: formData,
+            success: function(response) {
+                if (response && response.code === 0) {
+                    alert("预约成功, 请复制您的预约码，我们会联系您来体验课程，预约码:" + response.ticket);
+                    // 禁用提交按钮
+                    submitButton.prop("disabled", true);
+                    // 修改按钮文本
+                    submitButton.val("您已预约，预约码：" + response.ticket);
+                } else if (response && response.code === 1062) {
+
+                } else {
+                    alert("预约失败, 请您重试, 错误编码:" + response.code)
+                }
+            },
+            error: function(error) {
+                // 请求失败时的处理
+                console.error("预约失败, 请您重试");
+            }
+        });
+    });
+</script>
 
 </body>
 </html>

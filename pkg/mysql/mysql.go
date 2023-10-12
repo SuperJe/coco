@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"fmt"
+	"github.com/go-sql-driver/mysql"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
@@ -24,6 +25,16 @@ func DSEngine() (*xorm.Engine, error) {
 	return NewEngine(c)
 }
 
+// Engine 默认数据库ct的engine
+func Engine() (*xorm.Engine, error) {
+	c := &Config{
+		User:     "root",
+		Password: "123456",
+		DB:       "ct",
+	}
+	return NewEngine(c)
+}
+
 // NewEngine 根据配置新建mysql引擎
 func NewEngine(c *Config) (*xorm.Engine, error) {
 	dsn := fmt.Sprintf("%s:%s@(127.0.0.1:3306)/%s?charset=utf8", c.User, c.Password, c.DB)
@@ -35,4 +46,13 @@ func NewEngine(c *Config) (*xorm.Engine, error) {
 		return nil, errors.Wrap(err, "Ping err")
 	}
 	return engine, nil
+}
+
+// IsDupErr 是否是重复键冲突失败
+func IsDupErr(err error) bool {
+	errMySQL, ok := err.(*mysql.MySQLError)
+	if !ok {
+		return false
+	}
+	return errMySQL.Number == 1062
 }
