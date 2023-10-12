@@ -224,7 +224,7 @@
                 <iframe name="hiddenFrame" style="display: none;"></iframe>
                 -->
                 <ul class="actions">
-                    <li><input type="submit" value="点击预约" /> <button type="button" id="copy-ticket-button">复制预约码</button><div id="ticket"></div> </li>
+                    <li><input type="submit" value="点击预约" /> <button type="button" id="copy-ticket-button">复制预约码</button></li>
                 </ul>
             </form>
             <ul class="contact">
@@ -294,28 +294,32 @@
 
                     // 获取复制按钮和预约码元素
                     var copyTicketButton = document.getElementById('copy-ticket-button');
-                    var ticketElement = document.getElementById('ticket');
 
                     // 显示复制按钮
                     $('#copy-ticket-button').css('display', 'inline-block');
                     var ticketCode = response.ticket;
 
-                    // 将预约码显示在页面上
-                    ticketElement.innerText = '预约码: ' + ticketCode;
-
                     // 复制按钮的点击事件处理函数
                     copyTicketButton.addEventListener('click', function() {
-                        // 使用Clipboard API 写入剪贴板
-                        navigator.clipboard.writeText(ticketCode).then(function() {
-                            // 复制成功时的处理
-                            alert('预约码已复制到剪贴板！');
-                        }).catch(function(err) {
-                            // 复制失败时的处理
-                            console.error('复制失败: ', err);
+                        // navigator clipboard 需要https等安全上下文
+                        event.preventDefault(); // 阻止按钮的默认行为
+                        let textArea = document.createElement("textarea");
+                        textArea.value = ticketCode;
+                        // 使text area不在viewport，同时设置不可见
+                        textArea.style.position = "absolute";
+                        textArea.style.opacity = 0;
+                        textArea.style.left = "-999999px";
+                        textArea.style.top = "-999999px";document.body.appendChild(textArea);
+                        textArea.focus();
+                        textArea.select();
+                        return new Promise((res, rej) => {
+                            // 执行复制命令并移除文本框
+                            document.execCommand('copy') ? res() : rej();
+                            textArea.remove()
+                            alert("验证码复制成功!")
+                            copyTicketButton.focus()
                         });
                     });
-                } else if (response && response.code === 1062) {
-
                 } else {
                     alert("预约失败, 请您重试, 错误编码:" + response.code)
                 }
