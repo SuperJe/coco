@@ -287,7 +287,7 @@
             success: function(response) {
                 if (response && response.code === 0) {
                     // 修改按钮文本
-                    submitButton.val("您已预约，预约码：" + response.ticket + ", 已复制到您的剪贴板中");
+                    submitButton.val("预约码：" + response.ticket + ", 已复制成功");
 
                     // 获取复制按钮和预约码元素
                     // var copyTicketButton = document.getElementById('copy-ticket-button');
