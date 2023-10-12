@@ -254,7 +254,7 @@
 <script src="static/assets/js/util.js"></script>
 <script src="static/assets/js/main.js"></script>
 <script>
-    // 隐藏复制验证码按钮
+    // 隐藏复制预约码按钮
     $('#copy-ticket-button').css('display', 'none');
 
     function validatePhone(input) {
@@ -316,7 +316,7 @@
                             // 执行复制命令并移除文本框
                             document.execCommand('copy') ? res() : rej();
                             textArea.remove()
-                            alert("验证码复制成功!")
+                            alert("预约码复制成功!")
                             copyTicketButton.focus()
                         });
                     });
