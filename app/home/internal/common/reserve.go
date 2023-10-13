@@ -40,7 +40,7 @@ type ReserveReq struct {
 	Course   string `form:"course"`
 	Period   string `form:"period"`
 	Location string `form:"location"`
-	Msg      string `form:"msg"`
+	Msg      string `form:"message"`
 }
 
 func (rr *ReserveReq) IsValid() bool {

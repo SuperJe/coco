@@ -28,8 +28,8 @@ func (s *Store) AddReservation(ctx context.Context, reserve *Reserve) error {
 	return err
 }
 
-func (s *Store) GetReservation(ctx context.Context, name string) (*Reserve, error) {
-	r := &Reserve{Name: name}
+func (s *Store) GetReservation(ctx context.Context, phone string) (*Reserve, error) {
+	r := &Reserve{Phone: phone}
 	exist, err := s.mysql.Context(ctx).Get(r)
 	if err != nil {
 		return nil, err

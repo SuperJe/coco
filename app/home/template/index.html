@@ -52,7 +52,8 @@
             -->
             <img src="static/images/smxh_yellow.jpg" alt="" style="width: 10%;height: 10%;"/>
             <h2>兔小灵工作室</h2>
-            <p>水木莘华旗下专注于青少年编程的工作室，提供专业又有趣的编程体验。<a href="#"></a></p>
+            <p>水木莘华旗下专注于青少年编程的工作室，为同学们规划信息学竞赛的学习路线与相关课程升级。<a href="#"></a></p>
+            <p>我们有一个大梦想：以兴趣为导向，让每个孩子从小建立正确而有用的编程思维；以竞赛为反馈，让更多的孩子能够通过与高手的同台竞技获得积极的成就感。</p>
         </div>
     </section>
 
@@ -224,8 +225,9 @@
                 <iframe name="hiddenFrame" style="display: none;"></iframe>
                 -->
                 <ul class="actions">
-                    <li><input type="submit" value="点击预约" /> <button type="button" id="copy-ticket-button">复制预约码</button></li>
+                    <li><input type="submit" value="点击预约" /></li>
                 </ul>
+                <p id="reserve-msg" style="font-style: oblique"></p>
             </form>
             <ul class="contact">
                 <li class="icon solid fa-home">
@@ -254,9 +256,6 @@
 <script src="static/assets/js/util.js"></script>
 <script src="static/assets/js/main.js"></script>
 <script>
-    // 隐藏复制预约码按钮
-    $('#copy-ticket-button').css('display', 'none');
-
     function validatePhone(input) {
         // 移除错误提示信息
         input.setCustomValidity("");
@@ -282,46 +281,24 @@
         $.ajax({
             type: "POST",
             url: "http://81.71.3.223:7471/reserve",
-            // url: "http://localhost:7471/reserve",
+            // url: "http://192.168.2.4:7471/reserve",
             data: formData,
             success: function(response) {
                 if (response && response.code === 0) {
                     // 修改按钮文本
-                    submitButton.val("预约码：" + response.ticket + ", 已复制成功");
-
-                    // 获取复制按钮和预约码元素
-                    // var copyTicketButton = document.getElementById('copy-ticket-button');
-
-                    // 显示复制按钮
-                    // $('#copy-ticket-button').css('display', 'inline-block');
-                    var ticketCode = response.ticket;
-                    // navigator clipboard 需要https等安全上下文, 所以用copy
-                    let textArea = document.createElement("textarea");
-                    textArea.value = ticketCode;
-                    // 使text area不在viewport，同时设置不可见
-                    textArea.style.position = "absolute";
-                    textArea.style.opacity = 0;
-                    textArea.style.left = "-999999px";
-                    textArea.style.top = "-999999px";document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    return new Promise((res, rej) => {
-                        // 执行复制命令并移除文本框
-                        document.execCommand('copy') ? res() : rej();
-                        textArea.remove()
-                        alert("预约成功, 预约码为:" + response.ticket + ", 请保管好预约码，方便我们与你联系上课。");
-                        alert("预约码已复制成功!")
-                        submitButton.focus()
-                        // 禁用提交按钮
-                        submitButton.prop("disabled", true);
-                    });
+                    console.log('ticket code:', response.ticket)
+                    submitButton.val("预约成功。");
+                    submitButton.prop("disabled", true)
+                    let msg = document.getElementById('reserve-msg')
+                    msg.textContent = '*若手机号码填写有误, 请刷新本页面重新预约。*'
+                    alert("预约成功! 若手机号码填写有误, 请刷新本页面重新预约。")
                 } else {
                     alert("预约失败, 请您重试, 错误编码:" + response.code)
                 }
             },
             error: function(error) {
                 // 请求失败时的处理
-                console.error("预约失败, 请您重试");
+                alert("预约失败, 请您重试。")
             }
         });
     });

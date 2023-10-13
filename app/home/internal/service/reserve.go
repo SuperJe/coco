@@ -36,6 +36,7 @@ func (s *Service) Reserve(c *gin.Context) {
 		rsp.Code = -1
 		if errMySQL, ok := err.(*mysql.MySQLError); ok {
 			rsp.Code = int32(errMySQL.Number)
+			fmt.Println("db err:", err.Error())
 		}
 		rsp.Msg = err.Error()
 		c.AbortWithStatusJSON(http.StatusOK, rsp)
@@ -49,10 +50,9 @@ func (s *Service) Reserve(c *gin.Context) {
 func (s *Service) addReservation(ctx context.Context, req *common.ReserveReq) (string, error) {
 	ticket := util.RandString(10)
 	reserve := req.ToReserve(ticket)
-	fmt.Println(reserve)
 	if err := s.store.AddReservation(ctx, reserve); err != nil {
 		if db.IsDupErr(err) {
-			r, err := s.store.GetReservation(ctx, reserve.Name)
+			r, err := s.store.GetReservation(ctx, reserve.Phone)
 			if err != nil {
 				return "", err
 			}
