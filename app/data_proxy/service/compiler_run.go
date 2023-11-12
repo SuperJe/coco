@@ -24,7 +24,6 @@ func (s *Service) CompilerRun(c *gin.Context) {
 	rsp := &model.RunCompilerRsp{}
 	rsp.Msg = "成功"
 	if err := c.ShouldBindJSON(req); err != nil {
-		fmt.Println("c.ShouldBindJSON err:", err.Error())
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
