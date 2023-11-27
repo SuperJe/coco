@@ -147,7 +147,7 @@ func (cc *CPPCompiler) Run() (string, error) {
 	}
 	// 运行
 	cmd = exec.Command("bash", "-c", execFile+" < "+inputFile)
-	return runWithTimeout(cmd, 10)
+	return runWithTimeout(cmd, 30)
 }
 
 type PYCompiler struct {
@@ -175,5 +175,5 @@ func (pyc *PYCompiler) Run() (string, error) {
 	}
 	// 运行
 	cmd := exec.Command("bash", "-c", "cat "+inputFile+" | "+"python3 "+pyFile)
-	return runWithTimeout(cmd, 10)
+	return runWithTimeout(cmd, 30)
 }
