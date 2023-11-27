@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/gob"
 	"encoding/json"
+	"fmt"
 	"math/rand"
+	"runtime"
 )
 
 // DeepCopy 使用gob序列化, 默认不使用json是因为json不能序列化为未导出的数据
@@ -62,4 +64,10 @@ func RandString(n int) string {
 		remain--
 	}
 	return string(b)
+}
+
+func PrintGoroutineStack(i interface{}) {
+	var buf [8192]byte
+	n := runtime.Stack(buf[:], false)
+	fmt.Printf("return value:%+v, %s\n", i, string(buf[:n]))
 }

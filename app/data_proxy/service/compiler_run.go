@@ -63,6 +63,11 @@ func runWithTimeout(cmd *exec.Cmd, t int) (string, error) {
 		return stdErr.String(), err
 	}
 	go func() {
+		defer func() {
+			if err := recover(); err != nil {
+				util.PrintGoroutineStack(err)
+			}
+		}()
 		if err := cmd.Wait(); err != nil {
 			fmt.Println("wait err:", err.Error())
 		}
