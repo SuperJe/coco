@@ -27,11 +27,11 @@ func main() {
 // registerHandler 注册处理方法
 func registerHandler(r *gin.Engine, svc *service.Service) {
 	r.GET("", svc.GetIndex)
-	r.GET("/generic", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "generic.html", nil)
+	r.GET("/about_us", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "about_us.html", nil)
 	})
-	r.GET("/elements", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "elements.html", nil)
+	r.GET("/planning", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "planning.html", nil)
 	})
 
 	r.POST("/reserve", svc.Reserve)
