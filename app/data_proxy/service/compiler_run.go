@@ -55,6 +55,11 @@ func removeFile(file string) {
 }
 
 func runWithTimeout(cmd *exec.Cmd, t int) (string, error) {
+	defer func() {
+		if err := recover(); err != nil {
+			util.PrintGoroutineStack(err)
+		}
+	}()
 	stdOut := &bytes.Buffer{}
 	stdErr := &bytes.Buffer{}
 	cmd.Stdout = stdOut
