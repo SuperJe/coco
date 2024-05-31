@@ -28,7 +28,7 @@ func (s *Service) CompilerRun(c *gin.Context) {
 		return
 	}
 	if util.EmptyS(req.Lang) || util.EmptyS(req.Code) {
-		c.AbortWithStatus(http.StatusBadRequest)
+		c.AbortWithError(http.StatusBadRequest, fmt.Errorf("请求参数错误"))
 		return
 	}
 	compiler := newCompiler(req.Lang, req.Code, req.Input)
